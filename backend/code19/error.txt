@@ -1,0 +1,16 @@
+(AnaPlatform) [asuka@LAPTOP-IT88D87U code19]$ ./DC_ballet.sh 8 4 1 0x12 0x34
+Traceback (most recent call last):
+  File "/mnt/d/Project/AnaPlatform/backend/code19/DC_ballet.py", line 24, in <module>
+    t = test(
+  File "/mnt/d/Project/AnaPlatform/backend/code19/cvc_test.py", line 25, in __init__
+    self.MyDIF = Difference(
+  File "/mnt/d/Project/AnaPlatform/backend/code19/DIF.py", line 17, in __init__
+    super().__init__(
+  File "/mnt/d/Project/AnaPlatform/backend/code19/Root.py", line 41, in __init__
+    self.G_DDT()
+  File "/mnt/d/Project/AnaPlatform/backend/code19/Root.py", line 76, in G_DDT
+    y = self.Sbox_content[x]  # 第一个明文的S盒输出
+TypeError: 'NoneType' object is not subscriptable
+Fatal Error: Input is Empty. Please enter some asserts and query
+
+STP Error: Input is Empty. Please enter some asserts and query

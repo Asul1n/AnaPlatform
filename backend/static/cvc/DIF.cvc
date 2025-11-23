@@ -1,0 +1,102 @@
+S: ARRAY BITVECTOR(16) OF BITVECTOR(1);
+ASSERT(S[0bin0000000000000000] = 0bin0);
+ASSERT(S[0bin0000000000000001] = 0bin0);
+ASSERT(S[0bin0000000000000010] = 0bin0);
+ASSERT(S[0bin0000000000000011] = 0bin0);
+ASSERT(S[0bin0000000000000100] = 0bin0);
+ASSERT(S[0bin0000000000000101] = 0bin0);
+ASSERT(S[0bin0000000000000110] = 0bin0);
+ASSERT(S[0bin0000000000000111] = 0bin0);
+ASSERT(S[0bin0000000100000000] = 0bin0);
+ASSERT(S[0bin0000000100000001] = 0bin1);
+ASSERT(S[0bin0000000100000010] = 0bin0);
+ASSERT(S[0bin0000000100000011] = 0bin0);
+ASSERT(S[0bin0000000100000100] = 0bin0);
+ASSERT(S[0bin0000000100000101] = 0bin0);
+ASSERT(S[0bin0000000100000110] = 0bin0);
+ASSERT(S[0bin0000000100000111] = 0bin0);
+ASSERT(S[0bin0000001000000000] = 0bin0);
+ASSERT(S[0bin0000001000000001] = 0bin0);
+ASSERT(S[0bin0000001000000010] = 0bin1);
+ASSERT(S[0bin0000001000000011] = 0bin0);
+ASSERT(S[0bin0000001000000100] = 0bin0);
+ASSERT(S[0bin0000001000000101] = 0bin0);
+ASSERT(S[0bin0000001000000110] = 0bin0);
+ASSERT(S[0bin0000001000000111] = 0bin0);
+ASSERT(S[0bin0000001100000000] = 0bin0);
+ASSERT(S[0bin0000001100000001] = 0bin0);
+ASSERT(S[0bin0000001100000010] = 0bin0);
+ASSERT(S[0bin0000001100000011] = 0bin1);
+ASSERT(S[0bin0000001100000100] = 0bin0);
+ASSERT(S[0bin0000001100000101] = 0bin0);
+ASSERT(S[0bin0000001100000110] = 0bin0);
+ASSERT(S[0bin0000001100000111] = 0bin0);
+ASSERT(S[0bin0000010000000000] = 0bin0);
+ASSERT(S[0bin0000010000000001] = 0bin0);
+ASSERT(S[0bin0000010000000010] = 0bin0);
+ASSERT(S[0bin0000010000000011] = 0bin0);
+ASSERT(S[0bin0000010000000100] = 0bin1);
+ASSERT(S[0bin0000010000000101] = 0bin0);
+ASSERT(S[0bin0000010000000110] = 0bin0);
+ASSERT(S[0bin0000010000000111] = 0bin0);
+ASSERT(S[0bin0000010100000000] = 0bin0);
+ASSERT(S[0bin0000010100000001] = 0bin0);
+ASSERT(S[0bin0000010100000010] = 0bin0);
+ASSERT(S[0bin0000010100000011] = 0bin0);
+ASSERT(S[0bin0000010100000100] = 0bin0);
+ASSERT(S[0bin0000010100000101] = 0bin1);
+ASSERT(S[0bin0000010100000110] = 0bin0);
+ASSERT(S[0bin0000010100000111] = 0bin0);
+ASSERT(S[0bin0000011000000000] = 0bin0);
+ASSERT(S[0bin0000011000000001] = 0bin0);
+ASSERT(S[0bin0000011000000010] = 0bin0);
+ASSERT(S[0bin0000011000000011] = 0bin0);
+ASSERT(S[0bin0000011000000100] = 0bin0);
+ASSERT(S[0bin0000011000000101] = 0bin0);
+ASSERT(S[0bin0000011000000110] = 0bin1);
+ASSERT(S[0bin0000011000000111] = 0bin0);
+ASSERT(S[0bin0000011100000000] = 0bin0);
+ASSERT(S[0bin0000011100000001] = 0bin0);
+ASSERT(S[0bin0000011100000010] = 0bin0);
+ASSERT(S[0bin0000011100000011] = 0bin0);
+ASSERT(S[0bin0000011100000100] = 0bin0);
+ASSERT(S[0bin0000011100000101] = 0bin0);
+ASSERT(S[0bin0000011100000110] = 0bin0);
+ASSERT(S[0bin0000011100000111] = 0bin1);
+S_in_r1, S_out_r1, input1_r1, input2_r1, input3_r1, input4_r1, input1_r2, input2_r2, input3_r2, input4_r2, output1_r1, output2_r1, output3_r1, output4_r1, XOR_output_r1, XOR_input1_r1, XOR_input2_r1, permutation_input_r1, permutation_output_r1, modulo_input1_r1, modulo_input2_r1, modulo_output_r1, w_r1 : BITVECTOR(4);
+zonggeshu : BITVECTOR(8);
+permutation_input_r1_3,permutation_input_r1_2,permutation_input_r1_1,permutation_input_r1_0 : BITVECTOR(1);
+ASSERT(XOR_input1_r1 = input1_r1);
+ASSERT(XOR_input2_r1 = permutation_output_r1);
+ASSERT(S_in_r1 = input2_r1);
+ASSERT(permutation_input_r1 = S_out_r1);
+ASSERT(output1_r1 = XOR_output_r1);
+ASSERT(output2_r1 = input2_r1);
+ASSERT(input2_r2 = output1_r1);
+ASSERT(input1_r2 = output2_r1);
+ASSERT(BVGE(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]], S_in_r1[3:3]));
+ASSERT(BVGE(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]], S_in_r1[2:2]));
+ASSERT(BVGE(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]], S_in_r1[1:1]));
+ASSERT(BVGE(BVPLUS(4, 
+0bin000@S_in_r1[3:3],
+0bin000@S_in_r1[2:2],
+0bin000@S_in_r1[1:1]
+), 0bin000@(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]])));
+ASSERT(BVGE(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]], S_out_r1[3:3]));
+ASSERT(BVGE(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]], S_out_r1[2:2]));
+ASSERT(BVGE(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]], S_out_r1[1:1]));
+ASSERT(BVGE(BVPLUS(4, 
+0bin000@S_out_r1[3:3],
+0bin000@S_out_r1[2:2],
+0bin000@S_out_r1[1:1]
+), 0bin000@(S[0bin00000@S_in_r1[3:1]@0bin00000@S_out_r1[3:1]])));
+ASSERT(permutation_input_r1= permutation_input_r1_3@permutation_input_r1_2@permutation_input_r1_1@permutation_input_r1_0);
+ASSERT(permutation_output_r1= permutation_input_r1_3@permutation_input_r1_2);
+ASSERT(XOR_output_r1 = BVXOR(XOR_input1_r1, XOR_input2_r1));
+
+
+ASSERT(BVPLUS(8, 0bin00000000, 0bin0000000@(S_in_r1[0:0]|S_in_r1[1:1]|S_in_r1[2:2])) = zonggeshu);
+ASSERT(BVLE(zonggeshu, 0bin00000000));
+ASSERT(BVGT(input1_r1@input2_r1, 0bin00000000));
+QUERY(FALSE); 
+COUNTEREXAMPLE; 

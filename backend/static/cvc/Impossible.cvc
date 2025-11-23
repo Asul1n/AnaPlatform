@@ -1,0 +1,86 @@
+S: ARRAY BITVECTOR(16) OF BITVECTOR(1);
+S_in_r1, S_out_r1, input1_r1, input2_r1, input3_r1, input4_r1, output1_r1, output2_r1, output3_r1, output4_r1, OR_input1_r1, OR_input2_r1, OR_output_r1, AND_input1_r1, AND_input2_r1, AND_output_r1, modulo_input1_r1, modulo_input2_r1, modulo_output_r1, input1_r2, input2_r2, input3_r2, input4_r2, XOR_output_r1, XOR_input1_r1, XOR_input2_r1, permutation_input_r1, permutation_output_r1, p_layer_input1_r1, p_layer_input2_r1, p_layer_input3_r1, p_layer_input4_r1, p_layer_output1_r1, p_layer_output2_r1, p_layer_output3_r1, p_layer_output4_r1, S_in_r2, S_out_r2, output1_r2, output2_r2, output3_r2, output4_r2, OR_input1_r2, OR_input2_r2, OR_output_r2, AND_input1_r2, AND_input2_r2, AND_output_r2, modulo_input1_r2, modulo_input2_r2, modulo_output_r2, input1_r3, input2_r3, input3_r3, input4_r3, XOR_output_r2, XOR_input1_r2, XOR_input2_r2, permutation_input_r2, permutation_output_r2, p_layer_input1_r2, p_layer_input2_r2, p_layer_input3_r2, p_layer_input4_r2, p_layer_output1_r2, p_layer_output2_r2, p_layer_output3_r2, p_layer_output4_r2, S_in_r3, S_out_r3, output1_r3, output2_r3, output3_r3, output4_r3, OR_input1_r3, OR_input2_r3, OR_output_r3, AND_input1_r3, AND_input2_r3, AND_output_r3, modulo_input1_r3, modulo_input2_r3, modulo_output_r3, input1_r4, input2_r4, input3_r4, input4_r4, XOR_output_r3, XOR_input1_r3, XOR_input2_r3, permutation_input_r3, permutation_output_r3, p_layer_input1_r3, p_layer_input2_r3, p_layer_input3_r3, p_layer_input4_r3, p_layer_output1_r3, p_layer_output2_r3, p_layer_output3_r3, p_layer_output4_r3, S_in_r4, S_out_r4, output1_r4, output2_r4, output3_r4, output4_r4, OR_input1_r4, OR_input2_r4, OR_output_r4, AND_input1_r4, AND_input2_r4, AND_output_r4, modulo_input1_r4, modulo_input2_r4, modulo_output_r4, input1_r5, input2_r5, input3_r5, input4_r5, XOR_output_r4, XOR_input1_r4, XOR_input2_r4, permutation_input_r4, permutation_output_r4, p_layer_input1_r4, p_layer_input2_r4, p_layer_input3_r4, p_layer_input4_r4, p_layer_output1_r4, p_layer_output2_r4, p_layer_output3_r4, p_layer_output4_r4, S_in_r5, S_out_r5, output1_r5, output2_r5, output3_r5, output4_r5, OR_input1_r5, OR_input2_r5, OR_output_r5, AND_input1_r5, AND_input2_r5, AND_output_r5, modulo_input1_r5, modulo_input2_r5, modulo_output_r5, input1_r6, input2_r6, input3_r6, input4_r6, XOR_output_r5, XOR_input1_r5, XOR_input2_r5, permutation_input_r5, permutation_output_r5, p_layer_input1_r5, p_layer_input2_r5, p_layer_input3_r5, p_layer_input4_r5, p_layer_output1_r5, p_layer_output2_r5, p_layer_output3_r5, p_layer_output4_r5, S_in_r6, S_out_r6, output1_r6, output2_r6, output3_r6, output4_r6, OR_input1_r6, OR_input2_r6, OR_output_r6, AND_input1_r6, AND_input2_r6, AND_output_r6, modulo_input1_r6, modulo_input2_r6, modulo_output_r6, input1_r7, input2_r7, input3_r7, input4_r7, XOR_output_r6, XOR_input1_r6, XOR_input2_r6, permutation_input_r6, permutation_output_r6, p_layer_input1_r6, p_layer_input2_r6, p_layer_input3_r6, p_layer_input4_r6, p_layer_output1_r6, p_layer_output2_r6, p_layer_output3_r6, p_layer_output4_r6 : BITVECTOR(32);
+zonggeshu : BITVECTOR(8);
+permutation_input_r1_31,permutation_input_r1_30,permutation_input_r1_29,permutation_input_r1_28,permutation_input_r1_27,permutation_input_r1_26,permutation_input_r1_25,permutation_input_r1_24,permutation_input_r1_23,permutation_input_r1_22,permutation_input_r1_21,permutation_input_r1_20,permutation_input_r1_19,permutation_input_r1_18,permutation_input_r1_17,permutation_input_r1_16,permutation_input_r1_15,permutation_input_r1_14,permutation_input_r1_13,permutation_input_r1_12,permutation_input_r1_11,permutation_input_r1_10,permutation_input_r1_9,permutation_input_r1_8,permutation_input_r1_7,permutation_input_r1_6,permutation_input_r1_5,permutation_input_r1_4,permutation_input_r1_3,permutation_input_r1_2,permutation_input_r1_1,permutation_input_r1_0 : BITVECTOR(1);
+permutation_input_r2_31,permutation_input_r2_30,permutation_input_r2_29,permutation_input_r2_28,permutation_input_r2_27,permutation_input_r2_26,permutation_input_r2_25,permutation_input_r2_24,permutation_input_r2_23,permutation_input_r2_22,permutation_input_r2_21,permutation_input_r2_20,permutation_input_r2_19,permutation_input_r2_18,permutation_input_r2_17,permutation_input_r2_16,permutation_input_r2_15,permutation_input_r2_14,permutation_input_r2_13,permutation_input_r2_12,permutation_input_r2_11,permutation_input_r2_10,permutation_input_r2_9,permutation_input_r2_8,permutation_input_r2_7,permutation_input_r2_6,permutation_input_r2_5,permutation_input_r2_4,permutation_input_r2_3,permutation_input_r2_2,permutation_input_r2_1,permutation_input_r2_0 : BITVECTOR(1);
+permutation_input_r3_31,permutation_input_r3_30,permutation_input_r3_29,permutation_input_r3_28,permutation_input_r3_27,permutation_input_r3_26,permutation_input_r3_25,permutation_input_r3_24,permutation_input_r3_23,permutation_input_r3_22,permutation_input_r3_21,permutation_input_r3_20,permutation_input_r3_19,permutation_input_r3_18,permutation_input_r3_17,permutation_input_r3_16,permutation_input_r3_15,permutation_input_r3_14,permutation_input_r3_13,permutation_input_r3_12,permutation_input_r3_11,permutation_input_r3_10,permutation_input_r3_9,permutation_input_r3_8,permutation_input_r3_7,permutation_input_r3_6,permutation_input_r3_5,permutation_input_r3_4,permutation_input_r3_3,permutation_input_r3_2,permutation_input_r3_1,permutation_input_r3_0 : BITVECTOR(1);
+permutation_input_r4_31,permutation_input_r4_30,permutation_input_r4_29,permutation_input_r4_28,permutation_input_r4_27,permutation_input_r4_26,permutation_input_r4_25,permutation_input_r4_24,permutation_input_r4_23,permutation_input_r4_22,permutation_input_r4_21,permutation_input_r4_20,permutation_input_r4_19,permutation_input_r4_18,permutation_input_r4_17,permutation_input_r4_16,permutation_input_r4_15,permutation_input_r4_14,permutation_input_r4_13,permutation_input_r4_12,permutation_input_r4_11,permutation_input_r4_10,permutation_input_r4_9,permutation_input_r4_8,permutation_input_r4_7,permutation_input_r4_6,permutation_input_r4_5,permutation_input_r4_4,permutation_input_r4_3,permutation_input_r4_2,permutation_input_r4_1,permutation_input_r4_0 : BITVECTOR(1);
+permutation_input_r5_31,permutation_input_r5_30,permutation_input_r5_29,permutation_input_r5_28,permutation_input_r5_27,permutation_input_r5_26,permutation_input_r5_25,permutation_input_r5_24,permutation_input_r5_23,permutation_input_r5_22,permutation_input_r5_21,permutation_input_r5_20,permutation_input_r5_19,permutation_input_r5_18,permutation_input_r5_17,permutation_input_r5_16,permutation_input_r5_15,permutation_input_r5_14,permutation_input_r5_13,permutation_input_r5_12,permutation_input_r5_11,permutation_input_r5_10,permutation_input_r5_9,permutation_input_r5_8,permutation_input_r5_7,permutation_input_r5_6,permutation_input_r5_5,permutation_input_r5_4,permutation_input_r5_3,permutation_input_r5_2,permutation_input_r5_1,permutation_input_r5_0 : BITVECTOR(1);
+permutation_input_r6_31,permutation_input_r6_30,permutation_input_r6_29,permutation_input_r6_28,permutation_input_r6_27,permutation_input_r6_26,permutation_input_r6_25,permutation_input_r6_24,permutation_input_r6_23,permutation_input_r6_22,permutation_input_r6_21,permutation_input_r6_20,permutation_input_r6_19,permutation_input_r6_18,permutation_input_r6_17,permutation_input_r6_16,permutation_input_r6_15,permutation_input_r6_14,permutation_input_r6_13,permutation_input_r6_12,permutation_input_r6_11,permutation_input_r6_10,permutation_input_r6_9,permutation_input_r6_8,permutation_input_r6_7,permutation_input_r6_6,permutation_input_r6_5,permutation_input_r6_4,permutation_input_r6_3,permutation_input_r6_2,permutation_input_r6_1,permutation_input_r6_0 : BITVECTOR(1);
+ASSERT(modulo_input1_r1 = (input1_r1[7:0] @ input1_r1[31:8]));
+ASSERT(modulo_input2_r1 = input2_r1);
+ASSERT(modulo_output_r1 = output1_r1);
+ASSERT((input2_r1[28:0] @ input2_r1[31:29]) = XOR_input1_r1);
+ASSERT(modulo_output_r1 = XOR_input2_r1);
+ASSERT(output2_r1 = XOR_output_r1);
+ASSERT(output1_r1 = input1_r2);
+ASSERT(output2_r1 = input2_r2);
+ASSERT(XOR_output_r1 = BVXOR(XOR_input1_r1, XOR_input2_r1));
+ASSERT(((BVXOR(~(modulo_input1_r1 << 1)[31:0],(modulo_input2_r1 << 1)[31:0]) & BVXOR(~(modulo_input1_r1 << 1)[31:0],(modulo_output_r1 << 1)[31:0])) & (BVXOR(modulo_input1_r1,BVXOR(modulo_input2_r1,BVXOR(modulo_output_r1,(modulo_input2_r1 << 1)[31:0]))))) = 0bin00000000000000000000000000000000);
+
+
+ASSERT(modulo_input1_r2 = (input1_r2[7:0] @ input1_r2[31:8]));
+ASSERT(modulo_input2_r2 = input2_r2);
+ASSERT(modulo_output_r2 = output1_r2);
+ASSERT((input2_r2[28:0] @ input2_r2[31:29]) = XOR_input1_r2);
+ASSERT(modulo_output_r2 = XOR_input2_r2);
+ASSERT(output2_r2 = XOR_output_r2);
+ASSERT(output1_r2 = input1_r3);
+ASSERT(output2_r2 = input2_r3);
+ASSERT(XOR_output_r2 = BVXOR(XOR_input1_r2, XOR_input2_r2));
+ASSERT(((BVXOR(~(modulo_input1_r2 << 1)[31:0],(modulo_input2_r2 << 1)[31:0]) & BVXOR(~(modulo_input1_r2 << 1)[31:0],(modulo_output_r2 << 1)[31:0])) & (BVXOR(modulo_input1_r2,BVXOR(modulo_input2_r2,BVXOR(modulo_output_r2,(modulo_input2_r2 << 1)[31:0]))))) = 0bin00000000000000000000000000000000);
+
+
+ASSERT(modulo_input1_r3 = (input1_r3[7:0] @ input1_r3[31:8]));
+ASSERT(modulo_input2_r3 = input2_r3);
+ASSERT(modulo_output_r3 = output1_r3);
+ASSERT((input2_r3[28:0] @ input2_r3[31:29]) = XOR_input1_r3);
+ASSERT(modulo_output_r3 = XOR_input2_r3);
+ASSERT(output2_r3 = XOR_output_r3);
+ASSERT(output1_r3 = input1_r4);
+ASSERT(output2_r3 = input2_r4);
+ASSERT(XOR_output_r3 = BVXOR(XOR_input1_r3, XOR_input2_r3));
+ASSERT(((BVXOR(~(modulo_input1_r3 << 1)[31:0],(modulo_input2_r3 << 1)[31:0]) & BVXOR(~(modulo_input1_r3 << 1)[31:0],(modulo_output_r3 << 1)[31:0])) & (BVXOR(modulo_input1_r3,BVXOR(modulo_input2_r3,BVXOR(modulo_output_r3,(modulo_input2_r3 << 1)[31:0]))))) = 0bin00000000000000000000000000000000);
+
+
+ASSERT(modulo_input1_r4 = (input1_r4[7:0] @ input1_r4[31:8]));
+ASSERT(modulo_input2_r4 = input2_r4);
+ASSERT(modulo_output_r4 = output1_r4);
+ASSERT((input2_r4[28:0] @ input2_r4[31:29]) = XOR_input1_r4);
+ASSERT(modulo_output_r4 = XOR_input2_r4);
+ASSERT(output2_r4 = XOR_output_r4);
+ASSERT(output1_r4 = input1_r5);
+ASSERT(output2_r4 = input2_r5);
+ASSERT(XOR_output_r4 = BVXOR(XOR_input1_r4, XOR_input2_r4));
+ASSERT(((BVXOR(~(modulo_input1_r4 << 1)[31:0],(modulo_input2_r4 << 1)[31:0]) & BVXOR(~(modulo_input1_r4 << 1)[31:0],(modulo_output_r4 << 1)[31:0])) & (BVXOR(modulo_input1_r4,BVXOR(modulo_input2_r4,BVXOR(modulo_output_r4,(modulo_input2_r4 << 1)[31:0]))))) = 0bin00000000000000000000000000000000);
+
+
+ASSERT(modulo_input1_r5 = (input1_r5[7:0] @ input1_r5[31:8]));
+ASSERT(modulo_input2_r5 = input2_r5);
+ASSERT(modulo_output_r5 = output1_r5);
+ASSERT((input2_r5[28:0] @ input2_r5[31:29]) = XOR_input1_r5);
+ASSERT(modulo_output_r5 = XOR_input2_r5);
+ASSERT(output2_r5 = XOR_output_r5);
+ASSERT(output1_r5 = input1_r6);
+ASSERT(output2_r5 = input2_r6);
+ASSERT(XOR_output_r5 = BVXOR(XOR_input1_r5, XOR_input2_r5));
+ASSERT(((BVXOR(~(modulo_input1_r5 << 1)[31:0],(modulo_input2_r5 << 1)[31:0]) & BVXOR(~(modulo_input1_r5 << 1)[31:0],(modulo_output_r5 << 1)[31:0])) & (BVXOR(modulo_input1_r5,BVXOR(modulo_input2_r5,BVXOR(modulo_output_r5,(modulo_input2_r5 << 1)[31:0]))))) = 0bin00000000000000000000000000000000);
+
+
+ASSERT(modulo_input1_r6 = (input1_r6[7:0] @ input1_r6[31:8]));
+ASSERT(modulo_input2_r6 = input2_r6);
+ASSERT(modulo_output_r6 = output1_r6);
+ASSERT((input2_r6[28:0] @ input2_r6[31:29]) = XOR_input1_r6);
+ASSERT(modulo_output_r6 = XOR_input2_r6);
+ASSERT(output2_r6 = XOR_output_r6);
+ASSERT(output1_r6 = input1_r7);
+ASSERT(output2_r6 = input2_r7);
+ASSERT(XOR_output_r6 = BVXOR(XOR_input1_r6, XOR_input2_r6));
+ASSERT(((BVXOR(~(modulo_input1_r6 << 1)[31:0],(modulo_input2_r6 << 1)[31:0]) & BVXOR(~(modulo_input1_r6 << 1)[31:0],(modulo_output_r6 << 1)[31:0])) & (BVXOR(modulo_input1_r6,BVXOR(modulo_input2_r6,BVXOR(modulo_output_r6,(modulo_input2_r6 << 1)[31:0]))))) = 0bin00000000000000000000000000000000);
+
+
+ASSERT(BVGT(input1_r1@input2_r1 , 0bin0000000000000000000000000000000000000000000000000000000000000000));
+ASSERT(input1_r1@input2_r1 = 0bin0000000000000000000000000000000000000000000000000000000000000001);
+ASSERT(output1_r6@output2_r6 = 0bin1000000000000000000000000000000000000000000000000000000000000000);
+QUERY(FALSE); 
+COUNTEREXAMPLE; 

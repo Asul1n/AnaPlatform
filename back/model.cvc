@@ -1,0 +1,18 @@
+subkey_L : BITVECTOR(16);
+subkey_R : BITVECTOR(16);
+X0_in : BITVECTOR(16);
+X1_in : BITVECTOR(16);
+X2_in : BITVECTOR(16);
+X3_in : BITVECTOR(16);
+X0_out : BITVECTOR(16);
+X1_out : BITVECTOR(16);
+X2_out : BITVECTOR(16);
+X3_out : BITVECTOR(16);
+(ASSERT (= sum0 (bvrol X0_in 6)));
+(ASSERT (= sum1 (bvrol X2_in 15)));
+(ASSERT (= xor0 (bvadd r0 X1_in)));
+(ASSERT (= xor1 (bvadd r1 X3_in)));
+(ASSERT (= rot0 (bvxor sum0 subkey_L)));
+(ASSERT (= rot1 (bvxor sum1 subkey_R)));
+(ASSERT (= swapL (bvrol xor0 9)));
+(ASSERT (= swapR (bvrol xor1 14)));
