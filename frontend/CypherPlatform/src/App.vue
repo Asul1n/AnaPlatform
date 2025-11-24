@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
   // import TestSBoxPanel from './components/panels/TestSBoxPanel.vue';
-  import CypherEditor from './views/CypherEditor.vue';
   import Editor from './views/Editor.vue';
 </script>
 

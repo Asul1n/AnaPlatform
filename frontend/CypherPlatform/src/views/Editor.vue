@@ -125,7 +125,7 @@
 
     <!-- 属性面板（右上角） -->
     <transition name="fade">
-      <div v-if="ui.selectedNode" class="floating-prop-panel">
+      <div v-if="ui.selectedNode  && ui.showPropPanel" class="floating-prop-panel">
         <header class="floating-header">
           <h4>{{ ui.selectedNode?.data.label || ui.selectedNode?.type }} 属性</h4>
           <button @click="ui.closePropPanel">×</button>
@@ -163,6 +163,7 @@ const ui = useUIStore()
 
 function onNodeClick({ node }) {
   nodeStore.setSelected(node.id)
+  ui.openPropPanel()
 }
 
 // -------- 默认边配置 --------
@@ -173,7 +174,7 @@ const defaultEdgeOptions = {
 
 // -------- 节点类型映射 --------
 const nodeTypeMap = Object.fromEntries(
-  Object.entries(nodeComponentMap).map(([k, v]) => [k.toLowerCase(), v])
+  Object.entries(nodeComponentMap).map(([k, v]) => [k, v])
 )
 
 // -------- VueFlow 镜像数据 --------

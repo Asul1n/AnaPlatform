@@ -25,8 +25,9 @@ export type NodeTypeMap = {
   Shift: ShiftProps,
   PlainVar: PlainVarProps,
   KeyVar: KeyVarProps
-
 }
+
+
 
 /**
  * CanvasNode 接口

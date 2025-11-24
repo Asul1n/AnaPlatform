@@ -1,70 +1,109 @@
 <template>
-  <!-- g 是 SVG 的分组容器 -->
-  <g
-    @click="handleClick"
-    @mouseenter="hover = true"
-    @mouseleave="hover = false"
-    style="cursor: pointer;"
-  >
-    <!-- 正方形框 -->
-    <rect
-      :x="x - size / 2"
-      :y="y - size / 2"
-      :width="size"
-      :height="size"
-      rx="4"
-      ry="4"
-      :fill="hover ? '#FFF176' : selected ? '#FFD54F' : '#FFF9C4'"
-      stroke="#F57F17"
-      stroke-width="2"
+  <div class="add-node-wrapper">
+    <!-- 输入 Handle -->
+    <Handle
+      type="target"
+      :position="Position.Top"
+      id="in-top"
+      class="add-handle"
+    />
+    <Handle
+      type="target"
+      :position="Position.Left"
+      id="in-left"
+      class="add-handle"
     />
 
-    <!-- 十字号 -->
-    <line
-      :x1="x - crossSize / 2"
-      :y1="y"
-      :x2="x + crossSize / 2"
-      :y2="y"
-      stroke="#F57F17"
-      stroke-width="2"
-      stroke-linecap="round"
+    <!-- 节点主体 -->
+    <div class="add-node">
+      <div class="plus-box">+</div>
+    </div>
+
+    <!-- 输出 Handle -->
+    <Handle
+      type="source"
+      :position="Position.Bottom"
+      id="out-bottom"
+      class="add-handle"
     />
-    <line
-      :x1="x"
-      :y1="y - crossSize / 2"
-      :x2="x"
-      :y2="y + crossSize / 2"
-      stroke="#F57F17"
-      stroke-width="2"
-      stroke-linecap="round"
-    />
-  </g>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { reactive, watch } from 'vue'
+import { Handle, Position } from '@vue-flow/core'
 import { useNodeStore } from '@/stores/useNodeStore'
 
-// ✅ 接收节点位置和参数
-const props = defineProps({
-  id: { type: String, required: true },
-  x: { type: Number, required: true },
-  y: { type: Number, required: true },
-  size: { type: Number, default: 30 },
-  crossSize: { type: Number, default: 14 },
+interface Props {
+  id: string
+  data: {
+    label?: string
+    props?: {
+      name?: string
+    }
+  }
+}
+
+const props = defineProps<Props>()
+const nodeStore = useNodeStore()
+
+// 本地响应式 props
+const localProps = reactive({
+  name: props.data.props?.name || ''
 })
 
-// ✅ 获取全局 store
-const { state, setSelected } = useNodeStore()
+// 将本地修改同步到 store
+watch(localProps, (v) => {
+  nodeStore.updateNodeProps(props.id, v)
+}, { deep: true })
 
-// ✅ 本地 hover 状态
-const hover = ref(false)
-
-// ✅ 判断该节点是否被选中
-const selected = computed(() => state.selectedNodeId === props.id)
-
-// ✅ 点击事件（更新全局状态）
-function handleClick() {
-  setSelected(props.id)
-}
+// 外部 props 改变同步到本地
+watch(() => props.data.props, (v) => {
+  if (v) Object.assign(localProps, v)
+}, { deep: true })
 </script>
+
+<style scoped>
+.add-node-wrapper {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 节点主体：正方形框 */
+.add-node {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 十字 */
+.plus-box {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #000;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 28px;
+  background-color: #fff;
+  text-align: center;
+}
+
+/* Handle 样式（低干扰小圆点） */
+.add-handle {
+  width: 6px;
+  height: 6px;
+  background-color: #333;
+  border-radius: 50%;
+  position: absolute;
+}
+</style>
