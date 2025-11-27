@@ -335,3 +335,32 @@ body {
 .canvas-hint b {
   color: #2563eb;
 }
+
+
+// /* 确保覆盖层的样式可以容纳 DiffPathDisplay 内部的复杂布局 */
+// .param-overlay {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     height: 100%;
+//     z-index: 10;
+//     background-color: var(--el-bg-color-page); /* 使用页面背景色 */
+//     display: flex;
+//     flex-direction: column; /* 允许内部元素垂直堆叠 */
+// }
+
+// /* 为底部的返回按钮添加一个专门的容器，使其可以固定在底部或底部区域 */
+// .result-panel-footer {
+//     padding: 15px 20px;
+//     border-top: 1px solid var(--el-border-color-lighter);
+//     background-color: var(--el-bg-color);
+//     text-align: right;
+//     /* 如果需要固定在覆盖层底部，可以设置 position: sticky/absolute */
+// }
+
+// /* 调整 DiffPathDisplay 容器的大小，使其充满覆盖层的剩余空间 */
+// .param-overlay > :not(.result-panel-footer) {
+//     flex-grow: 1; /* 让 DiffPathDisplay 占据大部分空间 */
+//     /* 注意：DiffPathDisplay 内部应该自己处理高度，通常是 height: 100% 或 flex-grow: 1 */
+// }

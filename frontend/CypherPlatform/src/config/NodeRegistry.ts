@@ -1,4 +1,4 @@
-import type { ShiftProps } from "../panels/type"
+import type { ShiftProps } from "@/components/panels/type"
 
 export interface NodePropertyPanel<P extends object = object> {
   /** 对应属性编辑 Vue 组件名（注册在 /components/property-panels 下） */

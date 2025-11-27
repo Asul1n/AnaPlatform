@@ -1,378 +1,208 @@
 <template>
-  <div class="analysis-container">
-    <!-- 页面标题 -->
-    <div class="text-center mb-10">
-      <h1 class="text-3xl font-bold text-gray-800 mb-3">固定输入输出场景下聚合路线自动化挖掘</h1>
-      <p class="text-gray-600 max-w-3xl mx-auto">在固定初始输入与指定目标轮次输出的场景约束下，对聚合路线开展自动化挖掘，采用聚合分析方法实现量化挖掘与分析。</p>
-    </div>
+  <div class="analysis-panel path-mining-panel">
+    <h3 class="panel-title">🔎 路径挖掘与评估模块</h3>
+    <p class="panel-desc">
+      该模块用于搜索、评估和优化满足约束条件的差分/线性特征路径。
+    </p>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- 左侧：参数配置面板 -->
-      <div class="lg:col-span-1">
-        <el-card class="card" shadow="hover">
-          <template #header>
-            <h2 class="text-xl font-semibold text-gray-800">参数配置</h2>
-          </template>
-
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">初始输入差分</label>
-              <el-input v-model="inputDiff" placeholder="例如: 0x0001" />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">目标输出差分</label>
-              <el-input v-model="outputDiff" placeholder="例如: 0x0040" />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">目标轮次</label>
-              <el-select v-model="targetRounds" class="w-full">
-                <el-option value="3" label="3轮" />
-                <el-option value="4" label="4轮" />
-                <el-option value="5" label="5轮" />
-                <el-option value="6" label="6轮" />
+    <el-tabs v-model="activePathTab" type="card" class="tab-container">
+      <el-tab-pane label="路径搜索配置" name="search">
+        <div class="tab-content">
+          <h4>🛣️ 路径搜索参数设定</h4>
+          <el-form label-width="150px" class="search-form">
+            
+            <el-form-item label="分析类型">
+              <el-select v-model="analysisType" placeholder="选择差分或线性分析" class="small-input">
+                <el-option label="差分分析 (Differential)" value="diff" />
+                <el-option label="线性分析 (Linear)" value="linear" />
               </el-select>
-            </div>
+            </el-form-item>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">概率阈值 2<sup>-{{ probabilityThreshold }}</sup></label>
-              <el-slider v-model="probabilityThreshold" :min="1" :max="10" />
-            </div>
+            <el-form-item label="搜索深度 (轮数)">
+              <el-input-number v-model="searchDepth" :min="2" :max="maxRounds" class="small-input-num" />
+              <span class="tip-text"> / {{ maxRounds }} 轮</span>
+            </el-form-item>
 
-            <el-button
-              type="primary"
-              class="w-full"
-              :loading="isAnalyzing"
-              @click="startAnalysis"
-            >
-              <i class="fas fa-play-circle mr-2"></i>
-              {{ isAnalyzing ? '分析中...' : '开始挖掘分析' }}
-            </el-button>
-          </div>
+            <el-form-item label="概率 / 偏差阈值">
+              <el-input v-model="threshold" placeholder="例如: 2^-32 (差分) 或 2^-8 (线性)" class="medium-input">
+                <template #prepend>{{ thresholdLabel }}</template>
+              </el-input>
+            </el-form-item>
 
-          <div class="mt-6 pt-4 border-t border-gray-200">
-            <h3 class="text-lg font-medium text-gray-800 mb-2">概率赋值规则</h3>
-            <p class="text-sm text-gray-600">该方法遵循特定的概率赋值规则，以初始概率值1为起点，按2<sup>-1</sup>、2<sup>-2</sup>……的指数递减规律依次分配后续概率权重。</p>
-          </div>
-        </el-card>
+            <el-form-item label="固定输入差分">
+              <el-input v-model="inputDiff" placeholder="例如: 0x0001 (十六进制)" class="medium-input" />
+            </el-form-item>
+            
+            <el-form-item label="固定输出差分">
+              <el-input v-model="outputDiff" placeholder="例如: 0x1000 (十六进制)" class="medium-input" />
+            </el-form-item>
 
-        <!-- 分析进度 -->
-        <el-card v-if="isAnalyzing" class="card mt-6" shadow="hover">
-          <template #header>
-            <h3 class="text-lg font-medium text-gray-800">分析进度</h3>
-          </template>
-
-          <div class="flex items-center justify-center mb-4">
-            <el-progress
-              type="circle"
-              :percentage="analysisProgress"
-              :width="120"
-              :stroke-width="8"
-            />
-          </div>
-          <p class="text-center text-gray-600">{{ progressStatus }}</p>
-        </el-card>
-      </div>
-
-      <!-- 中间：挖掘结果展示 -->
-      <div class="lg:col-span-2">
-        <el-card class="card mb-6" shadow="hover">
-          <template #header>
-            <div class="flex justify-between items-center">
-              <h2 class="text-xl font-semibold text-gray-800">聚合路线挖掘结果</h2>
-              <div class="text-sm text-gray-500">
-                <i class="fas fa-history mr-1"></i>
-                最后更新: {{ lastUpdated }}
-              </div>
-            </div>
-          </template>
-
-          <div v-if="routes.length > 0" class="el-alert el-alert--info mb-6">
-            <div class="el-alert__content">
-              <p class="el-alert__description">
-                已发现 <strong>{{ routes.length }}</strong> 条符合条件的聚合路线。对路线所对应的各概率权重进行累加计算，实现量化挖掘与分析。
-              </p>
-            </div>
-          </div>
-
-          <div v-else class="text-center py-8 text-gray-500">
-            <i class="fas fa-search text-4xl mb-3"></i>
-            <p>暂无挖掘结果，请配置参数并开始分析</p>
-          </div>
-
-          <!-- 概率分布图表 -->
-          <div v-if="routes.length > 0" class="mb-6">
-            <h3 class="text-lg font-medium text-gray-800 mb-3">概率分布</h3>
-            <div class="bg-gray-50 p-4 rounded-lg">
-              <canvas ref="probabilityChart" height="120"></canvas>
-            </div>
-          </div>
-
-          <!-- 聚合路线列表 -->
-          <el-table v-if="routes.length > 0" :data="routes" class="w-full">
-            <el-table-column prop="id" label="路线ID" width="120" />
-            <el-table-column label="概率权重" width="200">
-              <template #default="{ row }">
-                <div class="flex items-center">
-                  <el-progress
-                    :percentage="row.probability * 100"
-                    :show-text="false"
-                    class="flex-1 mr-2"
-                  />
-                  <span class="text-sm text-gray-700">2<sup>-{{ row.exponent }}</sup></span>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column prop="status" label="状态" width="100">
-              <template #default="{ row }">
-                <el-tag
-                  :type="row.status === 'verified' ? 'success' :
-                         row.status === 'analyzing' ? 'warning' : 'info'"
-                >
-                  {{ row.status === 'verified' ? '已验证' :
-                     row.status === 'analyzing' ? '分析中' : '待验证' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="150">
-              <template #default="{ row }">
-                <el-button link type="primary" @click="showRouteDetails(row)">详情</el-button>
-                <el-button link type="primary" @click="exportRoute(row)">导出</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
-      </div>
-    </div>
-
-    <!-- 路线详情对话框 -->
-    <el-dialog v-model="dialogVisible" :title="`${selectedRoute?.id} 详情`" width="700px">
-      <div v-if="selectedRoute" class="space-y-4">
-        <div>
-          <h4 class="font-medium text-gray-700 mb-2">输入输出差分</h4>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <p class="text-sm text-gray-600">初始输入差分</p>
-              <p class="font-mono text-gray-800">{{ inputDiff }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600">目标输出差分</p>
-              <p class="font-mono text-gray-800">{{ outputDiff }}</p>
-            </div>
-          </div>
+            <el-form-item>
+              <el-button type="primary" @click="startPathSearch">🚀 开始路径搜索</el-button>
+            </el-form-item>
+          </el-form>
         </div>
+      </el-tab-pane>
 
-        <div>
-          <h4 class="font-medium text-gray-700 mb-2">概率权重</h4>
-          <div class="flex items-center">
-            <el-progress
-              :percentage="selectedRoute.probability * 100"
-              class="w-48 mr-2"
-            />
-            <span class="text-gray-800">2<sup>-{{ selectedRoute.exponent }}</sup></span>
-          </div>
+      <el-tab-pane label="路径约束与优化" name="optimize">
+        <div class="tab-content">
+          <h4>💡 路径稀疏性与活跃 S 盒约束</h4>
+          <el-form label-width="150px" class="optimize-form">
+            <el-form-item label="活跃S盒最大数">
+              <el-input-number v-model="maxActiveSBoxes" :min="1" :max="maxSBoxes" class="small-input-num" />
+              <span class="tip-text"> (总 S 盒数: {{ maxSBoxes }})</span>
+            </el-form-item>
+
+            <el-form-item label="路径位稀疏性">
+              <el-radio-group v-model="sparsityConstraint" class="small-radio-group">
+                <el-radio label="none">无约束</el-radio>
+                <el-radio label="input">仅输入稀疏</el-radio>
+                <el-radio label="all">路径全程稀疏</el-radio>
+              </el-radio-group>
+            </el-form-item>
+
+            <el-form-item label="冲突处理策略">
+              <el-switch v-model="ignoreConflicts" active-text="忽略 S 盒冲突" inactive-text="严格检查 S 盒冲突" class="medium-switch" />
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="warning" @click="optimizePath">🔁 重新优化路径</el-button>
+            </el-form-item>
+          </el-form>
         </div>
+      </el-tab-pane>
 
-        <div>
-          <h4 class="font-medium text-gray-700 mb-2">轮次分析</h4>
-          <div class="space-y-2">
-            <div v-for="round in selectedRoute.rounds" :key="round.number" class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium mr-3">
-                {{ round.number }}
-              </div>
-              <div class="flex-1">
-                <p class="text-sm text-gray-800">差分状态: <span class="font-mono">{{ round.state }}</span></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h4 class="font-medium text-gray-700 mb-2">路线特征</h4>
-          <ul class="list-disc pl-5 text-gray-600 space-y-1">
-            <li v-for="feature in selectedRoute.features" :key="feature">{{ feature }}</li>
-          </ul>
-        </div>
-      </div>
-
-      <template #footer>
-        <el-button @click="dialogVisible = false">关闭</el-button>
-        <el-button type="primary" @click="exportRoute(selectedRoute)">导出路线</el-button>
-      </template>
-    </el-dialog>
+    </el-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import Chart from 'chart.js/auto'
 
-// 响应式数据
-const inputDiff = ref('0x0001')
-const outputDiff = ref('0x0040')
-const targetRounds = ref('4')
-const probabilityThreshold = ref(3)
-const isAnalyzing = ref(false)
-const analysisProgress = ref(0)
-const progressStatus = ref('准备开始分析...')
-const routes = ref<any[]>([])
-const selectedRoute = ref<any>(null)
-const dialogVisible = ref(false)
-const lastUpdated = ref('')
-const probabilityChart = ref<HTMLCanvasElement>()
+// --- 模块状态 ---
+const activePathTab = ref('search')
+const maxRounds = 16 // 假设总轮数
+const maxSBoxes = 12 * maxRounds // 假设每轮有12个S盒
 
-// 方法
-const startAnalysis = () => {
-  isAnalyzing.value = true
-  analysisProgress.value = 0
-  progressStatus.value = '初始化分析参数...'
-  routes.value = []
+// --- 路径搜索配置 (Tab 1: search) ---
+const analysisType = ref('diff') // 'diff' 或 'linear'
+const searchDepth = ref(8)
+const threshold = ref('2^-32')
+const inputDiff = ref('0x0001') 
+const outputDiff = ref('0x1000')
 
-  // 模拟分析过程
-  const interval = setInterval(() => {
-    if (analysisProgress.value < 100) {
-      analysisProgress.value += 5
+// L121 修正：移除未使用的变量 searchAlgorithm
+// const searchAlgorithm = ref('astar') 
 
-      if (analysisProgress.value < 30) {
-        progressStatus.value = '扫描初始输入差分...'
-      } else if (analysisProgress.value < 60) {
-        progressStatus.value = '分析中间轮次状态...'
-      } else if (analysisProgress.value < 90) {
-        progressStatus.value = '计算概率权重...'
-      } else {
-        progressStatus.value = '生成聚合路线...'
-      }
-    } else {
-      clearInterval(interval)
-      isAnalyzing.value = false
-      progressStatus.value = '分析完成'
-      lastUpdated.value = new Date().toLocaleString()
+const lastSearchMessage = ref('')
 
-      // 生成模拟结果
-      generateResults()
-    }
-  }, 200)
+const thresholdLabel = computed(() => (analysisType.value === 'diff' ? '最小概率 P' : '最小偏差 |ε|'))
+
+// --- 路径约束与优化 (Tab 2: optimize) ---
+const maxActiveSBoxes = ref(40)
+const sparsityConstraint = ref('all') // 'none', 'input', 'all'
+const ignoreConflicts = ref(false)
+
+// --- 结果列表 (Tab 3: results) ---
+interface PathResult {
+  id: number
+  depth: number
+  valueType: 'P' | '|ε|'
+  value: string
+  activeSBoxes: number
+  pathSummary: string
+}
+const pathResultList = ref<PathResult[]>([])
+
+
+// --- 方法 ---
+
+function startPathSearch() {
+  lastSearchMessage.value =
+    `开始 ${analysisType.value === 'diff' ? '差分分析' : '线性分析'} 路径搜索...\n` +
+    `  > 搜索深度: ${searchDepth.value} 轮\n` +
+    `  > 最小 ${thresholdLabel.value}: ${threshold.value}\n` +
+    `  > **固定输入差分**: ${inputDiff.value}\n` + 
+    `  > **固定输出差分**: ${outputDiff.value}\n` +
+    `→ 运行中，请切换到“结果列表”查看进度... (模拟耗时 5s)`
+  
+  // 模拟搜索结果
+  setTimeout(() => {
+    pathResultList.value = [
+      { id: 1, depth: 8, valueType: analysisType.value === 'diff' ? 'P' : '|ε|', value: analysisType.value === 'diff' ? '2^-35.6' : '2^-8.2', activeSBoxes: 38, pathSummary: `${inputDiff.value} → ... → ${outputDiff.value}` },
+      { id: 2, depth: 8, valueType: analysisType.value === 'diff' ? 'P' : '|ε|', value: analysisType.value === 'diff' ? '2^-36.0' : '2^-8.5', activeSBoxes: 40, pathSummary: `${inputDiff.value} → ... → ${outputDiff.value}` },
+    ]
+    ElMessage.success('路径搜索完成！已找到 ' + pathResultList.value.length + ' 条路径。')
+    activePathTab.value = 'results'
+  }, 5000)
 }
 
-const generateResults = () => {
-  routes.value = [
-    {
-      id: 'Route-001',
-      probability: 0.95,
-      exponent: 1,
-      status: 'verified',
-      rounds: [
-        { number: 1, state: '0x0001' },
-        { number: 2, state: '0x0080' },
-        { number: 3, state: '0x0020' },
-        { number: 4, state: '0x0040' }
-      ],
-      features: ['高概率路线', '满足目标输出', '符合约束条件']
-    },
-    {
-      id: 'Route-007',
-      probability: 0.75,
-      exponent: 2,
-      status: 'verified',
-      rounds: [
-        { number: 1, state: '0x0001' },
-        { number: 2, state: '0x0040' },
-        { number: 3, state: '0x0010' },
-        { number: 4, state: '0x0040' }
-      ],
-      features: ['中等概率路线', '满足目标输出', '路径较长']
-    },
-    {
-      id: 'Route-012',
-      probability: 0.5,
-      exponent: 3,
-      status: 'analyzing',
-      rounds: [
-        { number: 1, state: '0x0001' },
-        { number: 2, state: '0x0200' },
-        { number: 3, state: '0x0100' },
-        { number: 4, state: '0x0040' }
-      ],
-      features: ['低概率路线', '满足目标输出', '路径复杂']
-    }
-  ]
-
-  // 初始化图表
-  nextTick(() => {
-    initChart()
-  })
+function optimizePath() {
+  lastSearchMessage.value =
+    `正在根据约束条件重新优化已找到的路径...\n` +
+    `  > 活跃S盒上限: ${maxActiveSBoxes.value}\n` +
+    `  > 稀疏性策略: ${sparsityConstraint.value}\n` +
+    `  > 冲突忽略: ${ignoreConflicts.value ? '是' : '否'}\n` +
+    `→ 优化完成，结果列表已更新。 (模拟耗时 2s)`
+  
+  // 模拟优化后更新结果
+  const newCount = Math.max(0, pathResultList.value.length - 1);
+  pathResultList.value = pathResultList.value.slice(0, newCount); 
+  
+  ElMessage.warning(`路径优化完成。筛选后剩余 ${pathResultList.value.length} 条路径。`)
+  activePathTab.value = 'results'
 }
-
-const showRouteDetails = (route: any) => {
-  selectedRoute.value = route
-  dialogVisible.value = true
-}
-
-const exportRoute = (route: any) => {
-  ElMessage.success(`导出路线 ${route.id} 的数据`)
-  // 在实际应用中，这里会实现导出功能
-}
-
-const initChart = () => {
-  if (!probabilityChart.value) return
-
-  const ctx = probabilityChart.value.getContext('2d')
-  if (!ctx) return
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: routes.value.map(r => r.id),
-      datasets: [{
-        label: '概率权重',
-        data: routes.value.map(r => r.probability),
-        backgroundColor: 'rgba(59, 130, 246, 0.7)',
-        borderColor: 'rgba(59, 130, 246, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 1,
-          title: {
-            display: true,
-            text: '概率值'
-          }
-        },
-        x: {
-          title: {
-            display: true,
-            text: '路线ID'
-          }
-        }
-      }
-    }
-  })
-}
-
-// 生命周期
-onMounted(() => {
-  lastUpdated.value = new Date().toLocaleString()
-})
 </script>
 
 <style scoped>
-.analysis-container {
+/* 继承自用户提供的样式 */
+.analysis-panel {
   padding: 20px;
-  background-color: #f8fafc;
-  min-height: 100vh;
+}
+.panel-title {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #1e3a8a; /* 深蓝色 */
+}
+.panel-desc {
+  font-size: 14px;
+  color: #475569; /* 灰色 */
+  margin-bottom: 14px;
+}
+.tab-container {
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+}
+.tab-content {
+  padding: 16px;
+}
+.analysis-result {
+  margin-top: 20px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  white-space: pre-wrap;
 }
 
-.card {
-  transition: all 0.3s ease;
+/* 新增样式 */
+.tip-text {
+  margin-left: 10px;
+  color: #94a3b8;
+  font-size: 13px;
 }
 
-.card:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+/* 优化后的输入组件宽度样式 */
+.small-input {
+  width: 150px; /* 较小的选择框/输入框宽度 */
+}
+.small-input-num {
+  width: 150px; /* 较小的数字输入框宽度 */
+}
+/* el-input 中包含 prepend 的组件需要更大的宽度 */
+.medium-input {
+  width: 280px; /* 中等宽度，用于包含前缀的输入框 */
 }
 </style>

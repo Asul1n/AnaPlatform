@@ -1,7 +1,7 @@
 import { nodeRegistry } from './NodeRegistry'
 import { markRaw } from 'vue'
 
-const modules = import.meta.glob('../Nodes/**/*.vue', { eager: true })
+const modules = import.meta.glob('../components/Nodes/**/*.vue', { eager: true })
 
 export const nodeComponentMap = Object.fromEntries(
   nodeRegistry.map(node => {

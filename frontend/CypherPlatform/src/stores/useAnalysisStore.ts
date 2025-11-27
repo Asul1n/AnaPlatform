@@ -2,18 +2,28 @@
 import { defineStore } from 'pinia'
 import { ref, reactive } from 'vue'
 
+/* 定义算法基本参数类型 */
+export interface BasicAlgorithmParams {
+  algorithmName: string;
+  blockSize: number;
+  branchNum: number;
+  roundFunction: string;
+  roundNum: number;
+  note: string;
+}
+
 export const useAnalysisStore = defineStore('analysis', () => {
   // 🧭 当前中间区域显示内容（画布 / 参数输入）
   const activeTab = ref<'canvas' | 'params'>('canvas')
 
   // 🧩 基本参数（算法输入区）
   const basicParams = reactive({
-    algorithmName: 'MyCipher', // 算法名称
-    blockSize: 64,             // 分组长度
-    branchNum: 4,              // 分支数
-    roundNum: 10,              // 轮数
-    mode: 'differential',      // 分析模式：differential | linear | conditional
-    description: '',           // 算法简要说明
+    algorithmName: '未命名算法',
+    blockSize: 64, // 默认值
+    branchNum: 4,   // 默认值
+    roundFunction: 'F(x) = ...', 
+    roundNum: 0,     
+    note: '',
   })
 
   // 🧠 设置参数

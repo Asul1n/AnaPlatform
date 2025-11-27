@@ -15,6 +15,7 @@ export interface SBoxProps {
 export interface PlainVarProps {
   name: string
   width: number
+  mode: 'input' | 'output'
 }
 
 export interface KeyVarProps {

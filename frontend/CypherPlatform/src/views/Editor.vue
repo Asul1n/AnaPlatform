@@ -9,6 +9,7 @@
             size="large"
             class="param-btn"
             @click="ui.setActive('params')"
+            :disabled="ui.analysisStep === 'results'"
           >
             ⚙️ 基本参数设置
           </el-button>
@@ -23,9 +24,19 @@
             size="large"
             class="param-btn"
             @click="ui.setActive('mode')"
+            :disabled="ui.analysisStep === 'analyzing'"
           >
             🧩 分析模式
           </el-button>
+          <p class="param-desc">
+            {{ 
+              ui.analysisStep === 'build' 
+              ? '第一步：选择聚合策略' 
+              : (ui.analysisStep === 'mode_select' 
+                ? '模式已选，可点击下方“运行”' 
+                : '') 
+            }}
+          </p>
         </div>
       </div>
 
@@ -35,17 +46,38 @@
             type="success"
             size="large"
             class="param-btn"
+            :loading="ui.analysisStep === 'analyzing'"
+            :disabled="ui.analysisStep !== 'mode_select'" @click="onRunAnalysis" >
+            <span v-if="ui.analysisStep === 'analyzing'">⏳ 正在分析...</span>
+            <span v-else>🚀 运行分析</span>
+          </el-button>
+          <p class="param-desc" v-if="ui.analysisStep === 'build'">请先配置模式</p>
+        </div>
+      </div>
+
+      <div class="sidebar-top">
+        <div class="param-header">
+          <el-button
+            type="info"
+            size="large"
+            class="param-btn"
             @click="ui.setActive('results')"
-          >
+            :disabled="ui.analysisStep !== 'results'" >
             📊 结果展示
           </el-button>
-          <p class="param-desc">查看差分路径与分析结果</p>
+          <p class="param-desc" v-if="ui.analysisStep !== 'results'">分析完成后解锁</p>
         </div>
       </div>
 
       <!-- 组件库 -->
       <div class="node-library-wrapper">
         <NodeLibrary :draggable-nodes="draggableNodes" />
+      </div>
+
+      <div>
+        <el-button type="info" size="default" @click="onExportClick">
+          📤 导出 JSON
+        </el-button>
       </div>
     </aside>
 
@@ -55,14 +87,16 @@
       <transition name="fade">
         <div v-if="ui.activePanel === 'params'" class="param-overlay">
           <BasicParamsForm />
-          <el-button type="primary" @click="ui.setActive('editor')">保存并返回画布</el-button>
+          <el-button type="primary" @click="() => { ui.setActive('editor'); ui.setStep('build') }">
+            保存并返回画布
+          </el-button>
         </div>
       </transition>
 
       <!-- 结果面板 -->
       <transition name="fade">
         <div v-if="ui.activePanel === 'results'" class="param-overlay">
-          <DiffPathDisplay />
+          <Display />
           <el-button type="primary" @click="ui.setActive('editor')">返回画布</el-button>
         </div>
       </transition>
@@ -71,29 +105,37 @@
       <transition name="fade">
         <div v-if="ui.activePanel === 'mode'" class="param-overlay">
           <AnaModeSelector v-model:selectedMode="ui.selectedMode" />
-          <el-button type="primary" @click="ui.setActive('editor')">返回画布</el-button>
+          <el-button type="primary" 
+            @click="() => { ui.setActive('editor'); ui.setStep('mode_select') }"
+          >
+            确认模式并返回画布
+          </el-button>
         </div>
       </transition>
 
       <!-- VueFlow 画布 -->
       <VueFlow
         class="flow"
-        :nodes="vfNodes"
-        :edges="vfEdges"
         :node-types="nodeTypeMap"
         :default-edge-options="defaultEdgeOptions"
         v-model:selected-nodes="ui.selectedNodeIds"
+        v-model:selected-edges="ui.selectedEdgeIds"
+        v-model:nodes="nodeStore.nodes"
+        v-model:edges="edgeStore.edges"
         @nodes-change="onNodesChange"
-        @edges-change="onEdgesChange"
         @connect="onConnect"
         @drop="onDrop"
-        @dragover.prevent
         @node-click="onNodeClick"
+        @node-context-menu="onRightClickNode"
+        @edge-context-menu="onRightClickEdge"
+        @pane-context-menu="onRightClickPane"
+
+        @dragover.prevent
       >
         <Background />
 
         <!-- 初始引导提示层 -->
-         <template v-if="vfNodes.length === 0 && ui.activePanel === 'editor'">
+         <template v-if="nodeStore.nodes.length === 0 && ui.activePanel === 'editor'">
           <div class="canvas-hint">
             <h3>欢迎来到带条件聚合类路线自动化分析平台</h3>
             <p>👉 从左侧拖入节点以构建分析路径</p>
@@ -103,9 +145,22 @@
          </template>
 
         <!-- 自定义节点渲染 -->
-        <template #node-default="{ id, data }">
+        <template #node-default="{ data }">
           <div class="node-wrapper vertical">
-            <Handle type="target" :position="Position.Top" :id="id+'-in'" class="node-handle" />
+            <!-- inputs（左侧或上方）-->
+            <div class="handles inputs">
+              <template v-for="(port, idx) in (data.ports?.inputs || [])" :key="port">
+                <!-- 把 Handle id 设为端口名（不包含节点 id） -->
+                <Handle
+                  type="target"
+                  :id="port"
+                  :position="Position.Top"
+                  class="node-handle"
+                  :style="{ left: ( (idx+1) * 100 / ((data.ports.inputs.length||1) + 1) ) + '%' }"
+                />
+              </template>
+            </div>
+
             <div class="node-body">
               <component
                 v-if="data.type"
@@ -117,10 +172,30 @@
                 <span>{{ data.label }}</span>
               </template>
             </div>
-            <Handle type="source" :position="Position.Bottom" :id="id+'-out'" class="node-handle" />
+
+            <!-- outputs（右侧或下方）-->
+            <div class="handles outputs">
+              <template v-for="(port, idx) in (data.ports?.outputs || [])" :key="port">
+                <Handle
+                  type="source"
+                  :id="port"
+                  :position="Position.Bottom"
+                  class="node-handle"
+                  :style="{ left: ( (idx+1) * 100 / ((data.ports.outputs.length||1) + 1) ) + '%' }"
+                />
+              </template>
+            </div>
           </div>
         </template>
       </VueFlow>
+
+      <!-- 右键菜单 -->
+      <ContextMenu
+        :visible="menu.visible"
+        :x="menu.position.x"
+        :y="menu.position.y"
+        @delete="menu.deleteTarget"
+      />
     </main>
 
     <!-- 属性面板（右上角） -->
@@ -144,27 +219,67 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { VueFlow, Handle, Position, type NodeChange, type EdgeChange, type Connection, type Node as VfNode, type Edge as VfEdge, MarkerType } from '@vue-flow/core'
+import { onMounted, onUnmounted } from 'vue'
+import { VueFlow, Handle, Position, type NodeChange,  type Connection, MarkerType } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { useNodeStore } from '@/stores/useNodeStore'
+import { useEdgeStore } from '@/stores/useEdgeStore'
 import { useUIStore } from '@/stores/useUIStore'
 import NodeLibrary from '@/components/NodeLibrary.vue'
 import BasicParamsForm from '@/components/BasicParamsForm.vue'
 import AnaModeSelector from '@/components/AnaModeSelector.vue'
 import DiffPathDisplay from './DiffPathDisplay.vue'
-import { nodeComponentMap } from '@/components/config/nodeComponentMap'
-
+import Display from './Display.vue'
+import ContextMenu from '@/components/panels/ContextMenu.vue'
+import { nodeComponentMap } from '@/config/nodeComponentMap'
+import { useMenuStore } from '@/stores/useMenuStore'
+import { useExportGraph } from "@/composables/useExportGraph"
 import '@/styles/editor_layout.scss'    // 导入样式
 
 // -------- stores --------
+const { exportGraph } = useExportGraph()
 const nodeStore = useNodeStore()
+const edgeStore = useEdgeStore()
+const menu = useMenuStore()
 const ui = useUIStore()
 
 function onNodeClick({ node }) {
   nodeStore.setSelected(node.id)
   ui.openPropPanel()
 }
+
+// ------------------ 删除统一处理 ------------------
+function deleteSelected() {
+  // 删除节点
+  ui.selectedNodeIds.forEach(id => nodeStore.removeNode(id))
+  ui.selectedNodeIds = []
+
+  // 删除边
+  ui.selectedEdgeIds.forEach(id => edgeStore.removeEdges(id))
+  ui.selectedEdgeIds = []
+}
+
+// 把删除行为暴露给 UIStore 的按钮一致性
+ui.deleteSelected = deleteSelected
+
+// 监听 Delete 键
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    // 输入框内按 delete 不触发删除
+    const tag = (e.target as HTMLElement).tagName.toLowerCase()
+    if (tag === 'input' || tag === 'textarea') return
+
+    deleteSelected()
+  }
+}
+
+// 把监听挂在全局
+onMounted(() => {
+  document.addEventListener('keydown', onKeydown)
+})
+onUnmounted(() => {
+  document.removeEventListener('keydown', onKeydown)
+})
 
 // -------- 默认边配置 --------
 const defaultEdgeOptions = {
@@ -177,22 +292,14 @@ const nodeTypeMap = Object.fromEntries(
   Object.entries(nodeComponentMap).map(([k, v]) => [k, v])
 )
 
-// -------- VueFlow 镜像数据 --------
-const vfNodes = computed(() => nodeStore.nodes.map(n => ({
-  id: n.id,
-  type: n.type,
-  position: { ...n.position },
-  data: { ...n.data }
-})))
-
-const vfEdges = computed(() => nodeStore.edges.map(e => ({ ...e })))
-
 // -------- 节点变化事件 --------
 function onNodesChange(changes: NodeChange[]) {
   changes.forEach(change => {
     switch (change.type) {
       case 'add': nodeStore.addNode(change.item); break
-      case 'remove': nodeStore.nodes = nodeStore.nodes.filter(n => n.id !== change.id); break
+      case 'remove': 
+        change.id && nodeStore.removeNode(change.id) // 自动删除节点及相关边
+        break
       case 'position':
         const n = nodeStore.nodes.find(x => x.id === change.id)
         if (n && change.position) n.position = { ...change.position }
@@ -204,21 +311,17 @@ function onNodesChange(changes: NodeChange[]) {
   })
 }
 
-// -------- 边变化事件 --------
-function onEdgesChange(changes: EdgeChange[]) {
-  changes.forEach(change => {
-    switch (change.type) {
-      case 'add': nodeStore.edges.push(change.item); break
-      case 'remove': nodeStore.edges = nodeStore.edges.filter(e => e.id !== change.id); break
-    }
-  })
-}
-
 // -------- 连接事件 --------
 function onConnect(connection: Connection) {
-  const id = `${connection.source}-${connection.target}`
-  const edge: VfEdge = { id, source: connection.source, target: connection.target, type: 'smoothstep', markerEnd: { type: MarkerType.ArrowClosed, width: 10, height: 10, color: '#555' } }
-  nodeStore.edges.push(edge)
+  edgeStore.addEdge({
+    id: `${connection.source}-${connection.sourceHandle}__${connection.target}-${connection.targetHandle}`,
+    source: connection.source,
+    target: connection.target,
+    sourceHandle: connection.sourceHandle,
+    targetHandle: connection.targetHandle,
+    type: 'smoothstep',
+    markerEnd: { type: MarkerType.ArrowClosed, width: 10, height: 10, color: '#555' }
+  })
 }
 
 // -------- 拖拽新增节点 --------
@@ -242,5 +345,52 @@ function onDrop(event: DragEvent) {
       props: nodeStore.getDefaultProps(type)
     }
   })
+}
+
+// -------- 右键菜单事件 --------
+function onRightClickNode({ event, node }: any) {
+  event.preventDefault()
+  event.stopPropagation()
+  menu.showMenu(event.clientX, event.clientY, 'node', node.id)
+  console.log("接受到右键点击")
+}
+
+function onRightClickEdge({ event, edge }: any) {
+  event.preventDefault()
+  event.stopPropagation()
+  menu.showMenu(event.clientX, event.clientY, 'edge', edge.id)
+  console.log("接受到右键点击")
+}
+
+function onRightClickPane(event: MouseEvent) {
+  event.preventDefault()
+  event.stopPropagation()
+  menu.showMenu(event.clientX, event.clientY, 'canvas', null)
+}
+
+
+// -------- 点击空白处隐藏菜单 --------
+function handleClickOutside() {
+  menu.hideMenu()
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('contextmenu', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('contextmenu', handleClickOutside)
+})
+
+function onExportClick() {
+    const json = exportGraph()
+    console.log(JSON.stringify(json, null, 2))
+}
+
+function onRunAnalysis() {
+    // 组件只负责处理 UI 事件，并调用业务逻辑模块
+    ui.runAnalysis()
 }
 </script>

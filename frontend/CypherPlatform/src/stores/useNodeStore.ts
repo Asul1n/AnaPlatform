@@ -10,10 +10,11 @@
  */
 
 import { defineStore } from 'pinia'
-import type { Edge } from '@vue-flow/core'
+import type { Node } from '@vue-flow/core'
 import type { SBoxProps, ShiftProps, PlainVarProps, KeyVarProps } from '@/components/panels/type'
-import { nodeRegistry } from '@/components/config/NodeRegistry'
-import { nodeComponentMap } from '@/components/config/nodeComponentMap'
+import { nodeRegistry } from '@/config/NodeRegistry'
+import { nodeComponentMap } from '@/config/nodeComponentMap'
+import { resolvePorts } from '@/config/portResolver'
 
 /**
  * NodeTypeMap
@@ -35,13 +36,17 @@ export type NodeTypeMap = {
  * 定义单个画布节点的数据结构。
  * 泛型 <T> 限定了节点类型及其 props 类型。
  */
-export interface CanvasNode<T extends keyof NodeTypeMap = keyof NodeTypeMap> {
+export interface CanvasNode<T extends keyof NodeTypeMap = keyof NodeTypeMap> extends Node{
   id: string               // 节点唯一标识
   type: string             // 节点类型（如 'Sbox', 'Shift'）
   position: { x: number, y: number }   // 节点在画布上的 X,Y 坐标
   data: {
     label?: string                     // 可选标签，用于显示节点名
     props: NodeTypeMap[T]              // 该节点对应的属性对象（根据类型映射）
+    ports: {
+      inputs:  string[]
+      outputs: string[]
+    }
   }
 }
 
@@ -63,7 +68,6 @@ export const useNodeStore = defineStore('nodeStore', {
    */
   state: () => ({
     nodes: [] as CanvasNode[],
-    edges: [] as Edge[],
     selectedNodeId: '' as string
   }),
 
@@ -93,6 +97,13 @@ export const useNodeStore = defineStore('nodeStore', {
 
     // 添加节点
     addNode<T extends keyof NodeTypeMap>(node: CanvasNode<T>) {
+      // 若节点已有自定义 ports（比如用户手动设置），优先保留
+      if (!node.data.ports) {
+        // 通过 type + props 计算最终 ports（前端不带 r）
+        const ports = resolvePorts(node.type, node.data.props ?? {})
+        node.data.ports = ports
+      }
+
       this.nodes.push(node)
     },
 
@@ -105,7 +116,14 @@ export const useNodeStore = defineStore('nodeStore', {
     // 设置选中节点
     setSelected(nodeId: string | null) {
       this.selectedNodeId = nodeId ?? ''
+    },
+
+    // 删除节点，同时删除相关边
+    removeNode(nodeId: string) {
+      this.nodes = this.nodes.filter(n => n.id !== nodeId)
+      if (this.selectedNodeId === nodeId) this.selectedNodeId = ''
     }
+
   }
 })
 

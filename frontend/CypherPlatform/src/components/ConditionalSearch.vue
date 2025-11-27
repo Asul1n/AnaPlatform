@@ -64,10 +64,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
-import BitMatrix from "@/components/BitMatrix.vue"
-import DiffPathGraph from "@/components/DiffPathGraph.vue"
+import BitMatrix from "./panels/BitMatrix.vue"
 
 // ====== 状态定义 ======
 const constraints = ref({

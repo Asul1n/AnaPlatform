@@ -68,8 +68,8 @@
 
 <script setup lang="ts">
 import { ref, computed, defineComponent, h, type PropType } from 'vue'
-import { nodeRegistry } from './config/NodeRegistry'
-import type { NodeConfig } from './config/NodeRegistry'
+import { nodeRegistry } from '@/config/NodeRegistry'
+import type { NodeConfig } from '@/config/NodeRegistry'
 import { useNodeStore } from '@/stores/useNodeStore'
 import { nanoid } from 'nanoid'
 
