@@ -1,6 +1,7 @@
 // composables/useExportGraph.ts
 import { computed } from "vue"
 import { useNodeStore } from "@/stores/useNodeStore"
+import { useEdgeStore } from "@/stores/useEdgeStore"
 import { useVueFlow } from "@vue-flow/core"
 import {
     generatePorts,
@@ -10,7 +11,7 @@ import {
 
 export function useExportGraph() {
     const nodeStore = useNodeStore()
-    const { getEdges } = useVueFlow()
+    const edgeStore = useEdgeStore()
 
     // ----------- 1. 每个节点的端口配置（永远返回 PortConfig）-----------
     const nodePortMap = computed<Record<string, PortConfig>>(() => {
@@ -54,7 +55,7 @@ export function useExportGraph() {
 
     // ----------- 3. 构建边（确保 resolvePortName 不会收到 undefined）-----------
     function buildEdges() {
-        const edges = getEdges.value
+        const edges = edgeStore.edges
         const names = nodeNameMap.value
         const ports = nodePortMap.value
 
