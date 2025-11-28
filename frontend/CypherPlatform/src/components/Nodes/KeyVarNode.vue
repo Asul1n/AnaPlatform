@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Handle, Position } from '@vue-flow/core'
 
 interface Props {
@@ -20,13 +21,14 @@ interface Props {
   data: {
     props?: {
       name?: string
-      width?: number
+      bitwidth?: number
     }
   }
 }
 
 const props = defineProps<Props>()
-const name = props.data.props?.name ?? 'K?'
+const name = computed(() => props.data.props?.name ?? '')
+
 </script>
 
 <style scoped>

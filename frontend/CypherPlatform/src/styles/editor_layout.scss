@@ -364,3 +364,29 @@ body {
 //     flex-grow: 1; /* 让 DiffPathDisplay 占据大部分空间 */
 //     /* 注意：DiffPathDisplay 内部应该自己处理高度，通常是 height: 100% 或 flex-grow: 1 */
 // }
+
+/* ---------------------------------------------------- */
+/* 针对 plain-var-node 的 Handle 定位覆盖 */
+/* ---------------------------------------------------- */
+
+/* 顶部 Handle (Output 模式) */
+.plain-var-handle.vue-flow__handle-top {
+  /* 强制覆盖 vue-flow 的默认定位 */
+  top: -3px !important; 
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  
+  /* 确保底部定位被清除 */
+  bottom: auto !important;
+}
+
+/* 底部 Handle (Input 模式) */
+.plain-var-handle.vue-flow__handle-bottom {
+  /* 强制覆盖 vue-flow 的默认定位 */
+  bottom: -3px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+
+  /* 确保顶部定位被清除 */
+  top: auto !important; 
+}

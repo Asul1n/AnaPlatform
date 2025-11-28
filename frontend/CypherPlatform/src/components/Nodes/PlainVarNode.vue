@@ -6,7 +6,7 @@
       :type="handleType"
       :position="handlePosition"
       :id="handleId"
-      class="var-handle"
+      class="var-handle plain-var-handle"
     />
   </div>
 </template>
@@ -67,20 +67,6 @@ const handleId = computed(() => (mode.value === 'input' ? `in-${props.id}` : `ou
   height: 6px;
   background: #333;
   border-radius: 50%;
-  position: absolute;
 }
 
-/* 输出模式：在线上方 */
-.top {
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* 输入模式：在线下方 */
-.bottom {
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-}
 </style>

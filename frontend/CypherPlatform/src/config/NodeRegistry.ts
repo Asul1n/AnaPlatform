@@ -33,7 +33,7 @@ export const nodeRegistry: NodeConfig[] = [
     vueRender: "PlainVarNode",
     propertyPanel: {
       component: 'PlainVarPropertyPanel',
-      schema: { name: 'X1', width: 8 }
+      schema: { name: 'X1', bitwidth: 8 }
     }
   },
   {
@@ -46,7 +46,7 @@ export const nodeRegistry: NodeConfig[] = [
     vueRender: "KeyVarNode",
     propertyPanel: {
       component: 'KeyVarPropertyPanel',
-      schema: { name: 'K1', width: 8 }
+      schema: { name: 'K1', bitwidth: 8 }
     }
   },
   // ----------------- 线性操作 -----------------
@@ -71,8 +71,8 @@ export const nodeRegistry: NodeConfig[] = [
       component: 'RotatePropertyPanel',
       schema: {                         // 定义默认属性
         direction: 'left',
-        shift: 1,
-        width: 8,
+        offset: 1,
+        bitwidth: 8,
       } satisfies ShiftProps, // ✅ 类型约束更安全
     }
   },

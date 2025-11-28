@@ -8,7 +8,7 @@
 
       <el-form-item label="位宽">
         <el-input-number
-          v-model="localProps.width"
+          v-model="localProps.bitwidth"
           :min="1"
           :max="256"
         />
@@ -27,7 +27,7 @@ const emit = defineEmits<{ (e: 'update:modelValue', v: KeyVarProps): void }>()
 
 const localProps = reactive<KeyVarProps>({
   name: props.modelValue?.name ?? 'K1',
-  width: props.modelValue?.width ?? 8,
+  bitwidth: props.modelValue?.bitwidth ?? 8,
 })
 
 // ✅ 双向绑定同步

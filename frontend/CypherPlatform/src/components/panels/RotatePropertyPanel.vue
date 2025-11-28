@@ -11,15 +11,15 @@
 
       <el-form-item label="偏移量">
         <el-input-number
-          v-model="localProps.shift"
+          v-model="localProps.offset"
           :min="0"
-          :max="(localProps.width ?? 32)"
+          :max="(localProps.bitwidth ?? 32)"
         />
       </el-form-item>
 
       <el-form-item label="位宽">
         <el-input-number
-          v-model="localProps.width"
+          v-model="localProps.bitwidth"
           :min="1"
           :max="256"
         />
@@ -39,8 +39,8 @@ const emit = defineEmits<{ (e: 'update:modelValue', v: ShiftProps): void }>()
 
 const localProps = reactive<ShiftProps>({
   direction: props.modelValue?.direction ?? 'left',
-  shift: props.modelValue?.shift ?? 1,
-  width: props.modelValue?.width ?? 8,
+  offset: props.modelValue?.offset ?? 1,
+  bitwidth: props.modelValue?.bitwidth ?? 8,
 })
 
 // 双向绑定监听

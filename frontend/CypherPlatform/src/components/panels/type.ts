@@ -2,8 +2,8 @@
 
 export interface ShiftProps {
   direction: string
-  shift: number
-  width: number
+  offset: number
+  bitwidth: number
 }
 
 export interface SBoxProps {
@@ -14,11 +14,12 @@ export interface SBoxProps {
 
 export interface PlainVarProps {
   name: string
-  width: number
+  bitwidth: number
   mode: 'input' | 'output'
 }
 
 export interface KeyVarProps {
   name: string
-  width: number
+  bitwidth: number
 }
+

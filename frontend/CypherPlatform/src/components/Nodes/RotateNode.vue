@@ -34,8 +34,8 @@ interface Props {
     label?: string
     props?: {
       direction?: 'left' | 'right'
-      shift?: number
-      width?: number
+      offset?: number
+      bitwidth?: number
     }
   }
 }
@@ -46,14 +46,14 @@ const nodeStore = useNodeStore()
 // 本地响应式 props
 const localProps = reactive({
   direction: props.data.props?.direction || 'left',
-  shift: props.data.props?.shift || 1,
-  width: props.data.props?.width || 8
+  offset: props.data.props?.offset || 1,
+  bitwidth: props.data.props?.bitwidth || 8
 })
 
 // 箭头字符串
 const arrowString = computed(() => {
   const base = localProps.direction === 'left' ? '<<<' : '>>>'
-  return `${base} ${localProps.shift}`
+  return `${base} ${localProps.offset}`
 })
 
 // 将本地修改同步到 store
