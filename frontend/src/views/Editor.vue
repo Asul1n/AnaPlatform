@@ -31,7 +31,7 @@
           <p class="param-desc">
             {{ 
               ui.analysisStep === 'build' 
-              ? '第一步：选择聚合策略' 
+              ? '第一步：搭建轮函数' 
               : (ui.analysisStep === 'mode_select' 
                 ? '模式已选，可点击下方“运行”' 
                 : '') 
@@ -284,7 +284,7 @@ onUnmounted(() => {
 // -------- 默认边配置 --------
 const defaultEdgeOptions = {
   type: 'smoothstep',
-  markerEnd: { type: MarkerType.ArrowClosed, width: 10, height: 10, color: '#555' }
+  markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: '#555' }
 }
 
 // -------- 节点类型映射 --------
@@ -320,7 +320,7 @@ function onConnect(connection: Connection) {
     sourceHandle: connection.sourceHandle,
     targetHandle: connection.targetHandle,
     type: 'smoothstep',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 10, height: 10, color: '#555' }
+    markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: '#555' }
   })
 }
 

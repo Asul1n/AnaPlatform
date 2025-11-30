@@ -120,7 +120,7 @@ export const nodeRegistry: NodeConfig[] = [
     outputs: ['out'],
     vueRender: "ConstantNode",
     propertyPanel: {
-      component: 'ConstPropertyPanel',
+      component: 'ConstVarPropertyPanel',
       schema: { value: 0x0F, width: 8 }
     }
   }

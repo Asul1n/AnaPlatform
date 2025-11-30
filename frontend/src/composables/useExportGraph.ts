@@ -127,6 +127,14 @@ export function useExportGraph() {
                     baseNode.props = props
                 }
             }
+
+            if (n.type === "constant") {
+                const props = n.data.props as {name?: string, value?: string, bitwidth?: number}
+                
+                if (props.value !== undefined) {
+                    baseNode.props = props
+                }
+            }
             
             // 如果 props 为空，可以选择不导出 props 字段，或保留它
             if (Object.keys(baseNode.props).length === 0) {

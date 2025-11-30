@@ -23,3 +23,8 @@ export interface KeyVarProps {
   bitwidth: number
 }
 
+export interface ConstVarProps {
+  name: string;
+  value: string;
+  bitwidth: number;
+}

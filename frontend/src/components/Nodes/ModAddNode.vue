@@ -3,14 +3,14 @@
     <!-- 输入 Handle -->
     <Handle
       type="target"
-      :position="Position.Top"
-      id="in-top"
+      :position="Position.Left"
+      id="in-left"
       class="add-handle"
     />
     <Handle
       type="target"
-      :position="Position.Left"
-      id="in-left"
+      :position="Position.Right"
+      id="in-right"
       class="add-handle"
     />
 
@@ -65,40 +65,43 @@ watch(() => props.data.props, (v) => {
 
 <style scoped>
 .add-node-wrapper {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* 节点主体：正方形框 */
+/* 缩小节点主体 */
 .add-node {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 十字 */
+/* 更紧凑的加号框 */
 .plus-box {
   width: 100%;
   height: 100%;
   border: 2px solid #000;
   border-radius: 4px;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   font-family: "Times New Roman", serif;
   font-weight: bold;
-  font-size: 28px;
+  font-size: 32px;         /* 加号变大 */
+  line-height: 1;          /* 减少上下间隙 */
   background-color: #fff;
   text-align: center;
 }
 
-/* Handle 样式（低干扰小圆点） */
+/* Handle 小圆点仍然保持小巧 */
 .add-handle {
   width: 6px;
   height: 6px;
@@ -106,4 +109,5 @@ watch(() => props.data.props, (v) => {
   border-radius: 50%;
   position: absolute;
 }
+
 </style>
