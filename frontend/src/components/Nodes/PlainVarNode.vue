@@ -42,7 +42,7 @@ const mode = computed(() => (nodeProps.value.mode ?? 'output') as 'input' | 'out
 const handlePosition = computed(() => mode.value === 'input' ? Position.Top : Position.Bottom)
 
 // Handle 的 type：输入为 target、输出为 source
-const handleType = computed(() => mode.value === 'input' ? 'source' : 'target')
+const handleType = computed(() => mode.value === 'input' ? 'target' : 'source')
 
 // 给 handle 分配不同 id，确保唯一性
 const handleId = computed(() => (mode.value === 'input' ? `in-${props.id}` : `out-${props.id}`))

@@ -15,6 +15,8 @@ import type { SBoxProps, ShiftProps, PlainVarProps, KeyVarProps } from '@/compon
 import { nodeRegistry } from '@/config/NodeRegistry'
 import { nodeComponentMap } from '@/config/nodeComponentMap'
 import { resolvePorts } from '@/config/portResolver'
+import { useAnalysisStore } from './useAnalysisStore'
+// import { defaultProps } from 'element-plus'
 
 /**
  * NodeTypeMap
@@ -90,10 +92,27 @@ export const useNodeStore = defineStore('nodeStore', {
     // 自动找到默认属性
     getDefaultProps(type: string) {
       const config = nodeRegistry.find(n => n.type === type)
-      return config?.propertyPanel?.schema
+      const defaultProps =  config?.propertyPanel?.schema
         ? structuredClone(config.propertyPanel.schema)
         : {}
+
+      // 检查是否为变量节点，并应用全局 blockSize
+      // 只有在调用时才实例化 store，避免循环依赖问题
+      const analysisStore = useAnalysisStore()
+
+      const variableTypes = ['plainVar', 'keyVar', 'constant', 'rotate']    // 定义需要应用 bitwidth 的节点类型
+      
+      if (variableTypes.includes(type) && defaultProps.bitwidth !== undefined) {
+        // 将 bitwidth i设置为全局的 blockSize
+        defaultProps.bitwidth = analysisStore.basicParams.blockSize
+      }
+
+      console.log(`[DEBUG] Node Type: ${type}, Final bitwidth: ${analysisStore.basicParams.blockSize}`)
+      console.log(`[DEBUG] Node Type: ${type}, Final bitwidth: ${defaultProps.bitwidth}`) // <--- 增加这行日志
+
+      return defaultProps
     },
+
 
     // 添加节点
     addNode<T extends keyof NodeTypeMap>(node: CanvasNode<T>) {
