@@ -231,12 +231,7 @@
       </VueFlow>
 
       <!-- 右键菜单 -->
-      <ContextMenu
-        :visible="menu.visible"
-        :x="menu.position.x"
-        :y="menu.position.y"
-        @delete="menu.deleteTarget"
-      />
+      <ContextMenu/>
 
       <transition name="fade">
           <div v-if="ui.showSnapshotPanel" class="floating-snapshot-panel">
@@ -435,7 +430,7 @@ function onRightClickEdge({ event, edge }: any) {
 function onRightClickPane(event: MouseEvent) {
   event.preventDefault()
   event.stopPropagation()
-  menu.showMenu(event.clientX, event.clientY, 'canvas', null)
+  menu.showMenu(event.clientX, event.clientY, 'canvas', '')
 }
 
 

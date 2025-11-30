@@ -77,6 +77,20 @@ export const useMenuStore = defineStore('menuStore', () => {
     hideMenu()
   }
 
+  function newCanvas() {
+    if (confirm('确定要清空当前画布并创建新图吗？该操作不可撤销！')) {
+      // 清空所有节点和边
+      nodeStore.nodes.splice(0, nodeStore.nodes.length);
+      edgeStore.edges.splice(0, edgeStore.edges.length);
+      
+      // 可以在这里重置 UI 状态
+      // const ui = useUIStore() // 如果需要，可以引入 uiStore 进行重置
+      
+      alert('画布已清空！您可以开始搭建新的分析路径。');
+    }
+    hideMenu();
+  }
+
   /** 获取当前目标信息（用于调试） */
   function getTargetInfo() {
     if (!target.value) return null
@@ -101,6 +115,7 @@ export const useMenuStore = defineStore('menuStore', () => {
     showMenu,
     hideMenu,
     deleteTarget,
-    getTargetInfo
+    getTargetInfo,
+    newCanvas
   }
 })
