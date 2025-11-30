@@ -149,11 +149,21 @@ export function useExportGraph() {
 
         const basicParams = analysisStore.exportConfig()
 
-        return {
+        const roundFunctionConfig = {
+            nodes: nodes,
+            edges: edges
+        };
+
+        const finalExport = {
             basicParams,
-            nodes,
-            edges
-        }
+            roundFunction: roundFunctionConfig,
+            isLastRoundDifferent: analysisStore.isLastRoundDifferent,
+            lastRoundFunction: analysisStore.isLastRoundDifferent
+                ? analysisStore.lastRoundFunctionSnapshot
+                : null,
+        };
+
+        return finalExport;
     }
 
     return {

@@ -365,4 +365,26 @@ body {
 //     /* 注意：DiffPathDisplay 内部应该自己处理高度，通常是 height: 100% 或 flex-grow: 1 */
 // }
 
+.floating-snapshot-panel {
+    position: absolute; /* 相对于 canvas-area 定位 */
+    top: 50px;          /* 距离 canvas-area 顶部的距离 */
+    right: 50px;        /* 距离 canvas-area 右侧的距离 */
+    width: 350px;       /* 确保有足够的宽度 */
+    height: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* 必须高于 VueFlow 的默认 z-index */
+    /* 添加 display flex 确保内部 header 和 content 布局正常 */
+    display: flex;
+    flex-direction: column; 
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+.floating-content {
+    flex-grow: 1;
+    overflow-y: auto; /* 确保内容过多时可以滚动 */
+    padding: 10px;
+}
 

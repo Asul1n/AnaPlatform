@@ -12,6 +12,13 @@ export interface BasicAlgorithmParams {
   note: string;
 }
 
+/* 定义视图结构 */
+export interface GraphSnapshot {
+  nodes: any[];
+  edges: any[];
+  // 可以添加其他视图信息，如缩放、平移位置
+}
+
 export const useAnalysisStore = defineStore('analysis', () => {
   // 🧭 当前中间区域显示内容（画布 / 参数输入）
   const activeTab = ref<'canvas' | 'params'>('canvas')
@@ -25,6 +32,22 @@ export const useAnalysisStore = defineStore('analysis', () => {
     roundNum: 0,     
     note: '',
   })
+
+  const lastRoundFunctionSnapshot = ref<GraphSnapshot | null>(null)
+  const isLastRoundDifferent = ref(false)
+
+  // 储存快照
+  const savedSnapshots = reactive<Record<string, GraphSnapshot>>({})
+
+  // 保存快照
+  function saveSnapshot(key: string, snapshot: GraphSnapshot) {
+    savedSnapshots[key] = snapshot;
+  }
+
+  // 加载快照
+  function loadSnapshot(key: string) {
+    return savedSnapshots[key];
+  }
 
   // 🧠 设置参数
   function setBasicParams(params: Partial<typeof basicParams>) {
@@ -45,10 +68,15 @@ export const useAnalysisStore = defineStore('analysis', () => {
     // 状态
     activeTab,
     basicParams,
+    savedSnapshots,
+    lastRoundFunctionSnapshot,
+    isLastRoundDifferent,
 
     // 方法
     setActiveTab,
     setBasicParams,
     exportConfig,
+    saveSnapshot,
+    loadSnapshot
   }
 })

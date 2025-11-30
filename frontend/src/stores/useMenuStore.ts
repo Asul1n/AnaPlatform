@@ -5,7 +5,7 @@ import { useNodeStore } from './useNodeStore'
 import { useEdgeStore } from './useEdgeStore'
 
 interface MenuTarget {
-  type: 'node' | 'edge'
+  type: 'node' | 'edge' |'canvas'
   id: string
 }
 

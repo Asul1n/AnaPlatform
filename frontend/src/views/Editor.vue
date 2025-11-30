@@ -79,7 +79,48 @@
           📤 导出 JSON
         </el-button>
       </div>
+
+      <div class="param-header">
+          <el-button
+              type="info"
+              size="large"
+              class="param-btn"
+              @click="onSaveSnapshot" >
+              💾 保存画布状态
+          </el-button>
+          <p class="param-desc">保存当前节点/边配置，随时复现</p>
+      </div>
+
+      <div class="param-header">
+          <el-button
+              type="default"
+              size="large"
+              class="param-btn"
+              @click="ui.toggleSnapshotPanel" >
+              🖼️ 管理/恢复快照 ({{ Object.keys(analysisStore.savedSnapshots).length }})
+          </el-button>
+          <p class="param-desc">查看和加载已保存的配置</p>
+      </div>
+
+      <div class="param-header">
+          <el-button
+              type="warning"
+              size="large"
+              class="param-btn"
+              @click="onSaveLastRound" 
+          >
+              💾 保存为最后一轮函数
+          </el-button>
+          <p class="param-desc" v-if="analysisStore.isLastRoundDifferent">
+              ✅ 最后一轮已配置
+          </p>
+          <p class="param-desc" v-else>
+              配置 Feistel 结构的特殊最后一轮
+          </p>
+      </div>
     </aside>
+
+  
 
     <!-- 中间画布 -->
     <main class="canvas-area">
@@ -196,6 +237,23 @@
         :y="menu.position.y"
         @delete="menu.deleteTarget"
       />
+
+      <transition name="fade">
+          <div v-if="ui.showSnapshotPanel" class="floating-snapshot-panel">
+              <header class="floating-header">
+                  <h4>画布快照与特殊轮函数管理</h4>
+                  <button @click="ui.toggleSnapshotPanel">×</button>
+              </header>
+              <div class="floating-content">
+                  <SnapshotManager 
+                      @load-snapshot="onLoadSnapshot" 
+                      @delete-snapshot="onDeleteSnapshot" 
+                      @load-last-round="onLoadLastRound"
+                      @clear-last-round="onClearLastRound"
+                  />
+              </div>
+          </div>
+      </transition>
     </main>
 
     <!-- 属性面板（右上角） -->
@@ -228,20 +286,34 @@ import { useUIStore } from '@/stores/useUIStore'
 import NodeLibrary from '@/components/NodeLibrary.vue'
 import BasicParamsForm from '@/components/BasicParamsForm.vue'
 import AnaModeSelector from '@/components/AnaModeSelector.vue'
-import DiffPathDisplay from './DiffPathDisplay.vue'
+import SnapshotManager from '@/components/SnapshotManager.vue'
+// import DiffPathDisplay from './DiffPathDisplay.vue'
 import Display from './Display.vue'
 import ContextMenu from '@/components/panels/ContextMenu.vue'
 import { nodeComponentMap } from '@/config/nodeComponentMap'
 import { useMenuStore } from '@/stores/useMenuStore'
 import { useExportGraph } from "@/composables/useExportGraph"
+import { useGraphStateManager } from '@/composables/useGraphStateManager'
+import { useAnalysisStore, type GraphSnapshot } from '@/stores/useAnalysisStore'
 import '@/styles/editor_layout.scss'    // 导入样式
 
 // -------- stores --------
 const { exportGraph } = useExportGraph()
+const analysisStore = useAnalysisStore()
 const nodeStore = useNodeStore()
 const edgeStore = useEdgeStore()
 const menu = useMenuStore()
 const ui = useUIStore()
+
+// 使用状态管理器，解构所有方法
+const {
+  onSaveSnapshot,
+  onLoadSnapshot,
+  onDeleteSnapshot,
+  onSaveLastRound,
+  onLoadLastRound,
+  onClearLastRound,
+} = useGraphStateManager()
 
 function onNodeClick({ node }) {
   nodeStore.setSelected(node.id)
@@ -352,14 +424,12 @@ function onRightClickNode({ event, node }: any) {
   event.preventDefault()
   event.stopPropagation()
   menu.showMenu(event.clientX, event.clientY, 'node', node.id)
-  console.log("接受到右键点击")
 }
 
 function onRightClickEdge({ event, edge }: any) {
   event.preventDefault()
   event.stopPropagation()
   menu.showMenu(event.clientX, event.clientY, 'edge', edge.id)
-  console.log("接受到右键点击")
 }
 
 function onRightClickPane(event: MouseEvent) {
@@ -393,4 +463,5 @@ function onRunAnalysis() {
     // 组件只负责处理 UI 事件，并调用业务逻辑模块
     ui.runAnalysis()
 }
+
 </script>

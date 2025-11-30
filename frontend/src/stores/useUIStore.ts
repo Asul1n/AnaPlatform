@@ -25,6 +25,8 @@ export const useUIStore = defineStore('uiStore', () => {
   const activePanel = ref<'editor' | 'params' | 'results' | 'mode'>('editor')
   const selectedMode = ref<'auto' | 'fixed' | 'constraint'>('auto')
 
+  const showSnapshotPanel = ref(false);    // 控制快照管理面板的显示
+
   function setStep(step: typeof analysisStep.value) {
       analysisStep.value = step
       // 当退出结果展示时，确保画布是可见的
@@ -169,6 +171,12 @@ export const useUIStore = defineStore('uiStore', () => {
       setActive('results')
   }
 
+  function toggleSnapshotPanel() {
+    console.log('快照面板状态切换前:', showSnapshotPanel.value); // 调试点 A
+    showSnapshotPanel.value = !showSnapshotPanel.value;
+    console.log('快照面板状态切换后:', showSnapshotPanel.value); // 调试点 B
+  }
+
 
 
 
@@ -191,6 +199,8 @@ export const useUIStore = defineStore('uiStore', () => {
     selectedEdgeIds,
 
     deleteSelected,
-    runAnalysis
+    runAnalysis,
+    showSnapshotPanel,
+    toggleSnapshotPanel
   }
 })
