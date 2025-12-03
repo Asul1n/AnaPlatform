@@ -8,6 +8,34 @@ import {
     resolvePortName,
     type PortConfig
 } from "@/config/portNaming"
+import type { GraphSnapshot } from "@/stores/useAnalysisStore"
+
+// 导出节点的基本结构（后端关注的部分）
+export interface ExportNode {
+    id: string;
+    name: string; // 映射后的节点名称，如 X1, SBOX1
+    type: string;
+    position: { x: number, y: number }; // 尽管后端可能不需要，但快照需要
+    ports: PortConfig;
+    props?: Record<string, any>; // 节点的具体属性（如 bitwidth, offset, value）
+}
+
+// 导出边结构（后端关注的部分）
+export interface ExportEdge {
+    source: string; // 格式: NODE_NAME_PORT_NAME 或 NODE_NAME
+    target: string;
+}
+
+// 导出的完整图数据结构
+export interface GraphData {
+    basicParams: Record<string, any>; // 假设 exportConfig 返回这个
+    roundFunction: {
+        nodes: ExportNode[];
+        edges: ExportEdge[];
+    };
+    isLastRoundDifferent: boolean;
+    lastRoundFunction: GraphSnapshot | null; // 使用 GraphSnapshot 类型
+}
 
 export function useExportGraph() {
     const nodeStore = useNodeStore()
@@ -102,7 +130,12 @@ export function useExportGraph() {
                 id: n.id,
                 name: nodeNameMap.value[n.id],
                 type: n.type,
+                // 🚀 关键修正：加入 position 属性，确保 VueFlow 能够渲染
+                position: n.position, 
+                // 端口和数据
                 ports: nodePortMap.value[n.id],
+                data: n.data, // 保留原始 data，后续只修改 props
+
                 // 预设一个空的 props 对象，后面根据类型添加具体属性
                 props: {} as Record<string, any>
             }
@@ -159,7 +192,7 @@ export function useExportGraph() {
             roundFunction: roundFunctionConfig,
             isLastRoundDifferent: analysisStore.isLastRoundDifferent,
             lastRoundFunction: analysisStore.isLastRoundDifferent
-                ? analysisStore.lastRoundFunctionSnapshot
+                ? analysisStore.lastRoundSnapshot
                 : null,
         };
 

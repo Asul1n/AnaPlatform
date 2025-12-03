@@ -76,7 +76,7 @@ watch(
   /* 【重要】: 使用 store 提供的 position */
   top: v-bind('menu.position.y + "px"'); 
   left: v-bind('menu.position.x + "px"');
-  z-index: 9999;
+  z-index: 2147483647;
   padding: 8px;
   /* 确保菜单不会被意外拉伸 */
   min-width: 100px;

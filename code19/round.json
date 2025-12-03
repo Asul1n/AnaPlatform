@@ -1,0 +1,457 @@
+{
+  "basicParams": {
+    "algorithmName": "LEA",
+    "blockSize": 128,
+    "branchNum": 4,
+    "roundFunction": "F(x) = ...",
+    "roundNum": 3,
+    "note": ""
+  },
+  "roundFunction": {
+    "nodes": [
+      {
+        "id": "N0uCFEThZGUxWgow6Y3s-",
+        "name": "X0",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "vqyYLjI27mvzBd8zAmiyt",
+        "name": "X3",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "w7VN285CGO4E7qa1VQMjS",
+        "name": "X2",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "MCj8PVEtip6RiD3NhZETP",
+        "name": "X1",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "k3xAp5-gocNraQKTrs5Fb",
+        "name": "XOR1",
+        "type": "xor",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "M_DBXJNbCuKLOvSinXvcC",
+        "name": "K0",
+        "type": "keyVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "Xa1NAuBvk5MQnngIVFo80",
+        "name": "K1",
+        "type": "keyVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "dX1GoNNH7lLH137NJzuIN",
+        "name": "XOR2",
+        "type": "xor",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "kOvH1SY02s0JasZZFQM9N",
+        "name": "MODADD1",
+        "type": "modadd",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "R9wox-OBVEnhfryVNT3N0",
+        "name": "ROTATE1",
+        "type": "rotate",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        },
+        "props": {
+          "direction": "left",
+          "offset": 9,
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "OZr-ZN4r2XpfVgioC4r2s",
+        "name": "Y0",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "WXdxuoXaEoQgeAmMYvjVq",
+        "name": "XOR3",
+        "type": "xor",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "NZMtYadFwEkGGAN3zSNWE",
+        "name": "K2",
+        "type": "keyVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "D1DgqmcqRduUz3oNX7lmG",
+        "name": "K3",
+        "type": "keyVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "cuxSFmZq-Y6THQuCs5BEa",
+        "name": "XOR4",
+        "type": "xor",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "iy9fHBmQT_fHr5RqJLdwd",
+        "name": "ROTATE2",
+        "type": "rotate",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        },
+        "props": {
+          "direction": "right",
+          "offset": 5,
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "I_PFQ3QYuTTGYU_OsNIbb",
+        "name": "MODADD2",
+        "type": "modadd",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "zolnHhEY6qwbOnA4uONGU",
+        "name": "Y1",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "h_fGVbRIXBr9mu_o5qzUq",
+        "name": "Ka",
+        "type": "keyVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "so6NS51gf5HFuk70B3ahq",
+        "name": "K4",
+        "type": "keyVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "yItIkq4kZNXnQXNo1xv8d",
+        "name": "XOR5",
+        "type": "xor",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "H5lOW1mxBBb6hVqDbdvWo",
+        "name": "XOR6",
+        "type": "xor",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "HOhcUV3_nVeKNVTuNRgpC",
+        "name": "MODADD3",
+        "type": "modadd",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        }
+      },
+      {
+        "id": "R_Bmat8QbjubX4ureVqG3",
+        "name": "ROTATE3",
+        "type": "rotate",
+        "ports": {
+          "inputs": [
+            "input1"
+          ],
+          "outputs": [
+            "output1"
+          ]
+        },
+        "props": {
+          "direction": "right",
+          "offset": 3,
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "JMG7sHpvvXYc4FwxMmsR1",
+        "name": "Y2",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      },
+      {
+        "id": "-Ueae4TwJt3KvdHaa-jtU",
+        "name": "Y3",
+        "type": "plainVar",
+        "ports": {
+          "inputs": [],
+          "outputs": []
+        },
+        "props": {
+          "bitwidth": 128
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "X0",
+        "target": "XOR1_input1"
+      },
+      {
+        "source": "K0",
+        "target": "XOR1_input1"
+      },
+      {
+        "source": "K1",
+        "target": "XOR2_input1"
+      },
+      {
+        "source": "X1",
+        "target": "XOR2_input1"
+      },
+      {
+        "source": "XOR1_output1",
+        "target": "MODADD1_input1"
+      },
+      {
+        "source": "XOR2_output1",
+        "target": "MODADD1_input1"
+      },
+      {
+        "source": "MODADD1_output1",
+        "target": "ROTATE1_input1"
+      },
+      {
+        "source": "ROTATE1_output1",
+        "target": "Y0"
+      },
+      {
+        "source": "X1",
+        "target": "XOR3_input1"
+      },
+      {
+        "source": "K2",
+        "target": "XOR3_input1"
+      },
+      {
+        "source": "K3",
+        "target": "XOR4_input1"
+      },
+      {
+        "source": "X2",
+        "target": "XOR4_input1"
+      },
+      {
+        "source": "XOR3_output1",
+        "target": "MODADD2_input1"
+      },
+      {
+        "source": "XOR4_output1",
+        "target": "MODADD2_input1"
+      },
+      {
+        "source": "MODADD2_output1",
+        "target": "ROTATE2_input1"
+      },
+      {
+        "source": "ROTATE2_output1",
+        "target": "Y1"
+      },
+      {
+        "source": "X2",
+        "target": "XOR5_input1"
+      },
+      {
+        "source": "K4",
+        "target": "XOR5_input1"
+      },
+      {
+        "source": "Ka",
+        "target": "XOR6_input1"
+      },
+      {
+        "source": "X3",
+        "target": "XOR6_input1"
+      },
+      {
+        "source": "XOR5_output1",
+        "target": "MODADD3_input1"
+      },
+      {
+        "source": "XOR6_output1",
+        "target": "MODADD3_input1"
+      },
+      {
+        "source": "MODADD3_output1",
+        "target": "ROTATE3_input1"
+      },
+      {
+        "source": "ROTATE3_output1",
+        "target": "Y2"
+      },
+      {
+        "source": "X0",
+        "target": "Y3"
+      }
+    ]
+  },
+  "isLastRoundDifferent": false,
+  "lastRoundFunction": null
+}

@@ -78,7 +78,10 @@ export const useMenuStore = defineStore('menuStore', () => {
   }
 
   function newCanvas() {
+    console.log('newCanvas 函数被调用');
+
     if (confirm('确定要清空当前画布并创建新图吗？该操作不可撤销！')) {
+      console.log('确认清空画布');
       // 清空所有节点和边
       nodeStore.nodes.splice(0, nodeStore.nodes.length);
       edgeStore.edges.splice(0, edgeStore.edges.length);

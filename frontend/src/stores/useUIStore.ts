@@ -8,7 +8,7 @@
 /* useUIStore — 管理 UI 面板状态 + VueFlow 双向绑定代理 */
 
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, toRaw } from 'vue'
 import { useNodeStore } from './useNodeStore'
 import { useEdgeStore } from './useEdgeStore'
 import { nodeRegistry } from '@/config/NodeRegistry'
@@ -71,8 +71,23 @@ export const useUIStore = defineStore('uiStore', () => {
 
   /** 属性面板 v-model 代理 */
   const selectedNodeModel = computed({
-    get: () => selectedNode.value ? JSON.parse(JSON.stringify(selectedNode.value.data.props))
- : null,
+    get: () => {
+        const node = selectedNode.value;
+        if (!node) return null;
+        
+        // 1. 使用 toRaw() 获取原始的、非 Proxy 的 props 对象
+        const rawProps = toRaw(node.data.props);
+        
+        // 2. 再次使用 structuredClone 或 JSON.parse(JSON.stringify) 对原始对象进行深拷贝
+        //    structuredClone 是更好的选择，因为它更健壮。
+        try {
+            return structuredClone(rawProps);
+        } catch (e) {
+            console.error("无法使用 structuredClone，回退到 JSON 循环。错误:", e);
+            // 如果 structuredClone 失败，回退到 JSON 循环（但这是性能较低的备用方案）
+            return JSON.parse(JSON.stringify(rawProps));
+        }
+    },
     set: (v) => {
       const n = selectedNode.value
       if (!n || !v) return

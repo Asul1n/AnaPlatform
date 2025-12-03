@@ -20,7 +20,22 @@ export function useGraphStateManager() {
         edgeStore.edges.splice(0, edgeStore.edges.length);
 
         // 2. 加载快照数据 (深度复制并使用 push 变异)
-        const newNodes = JSON.parse(JSON.stringify(snapshot.nodes));
+        const newNodes = JSON.parse(JSON.stringify(snapshot.nodes)).map(node => {
+            // 🌟 容错处理：确保至少有 position 和 type
+            if (!node.position) {
+                console.warn(`节点 ${node.id} 缺少位置信息，使用默认位置。`);
+                node.position = { x: 50, y: 50 }; // 设置默认位置
+            }
+            if (!node.type) {
+                console.error(`节点 ${node.id} 缺少 type 属性，无法渲染！`);
+            }
+            // 确保 data 对象存在，即使它在保存时被优化掉了
+            if (!node.data) {
+                node.data = {};
+            }
+            
+            return node;
+        });
         const newEdges = JSON.parse(JSON.stringify(snapshot.edges));
 
         nodeStore.nodes.push(...newNodes);
@@ -40,9 +55,9 @@ export function useGraphStateManager() {
         // 2. 存储到 Store
         const snapshotName = prompt('请输入快照名称:', `Snapshot_${Date.now()}`);
         if (snapshotName) {
-            analysisStore.saveSnapshot(snapshotName, snapshot);
+            analysisStore.addSnapshot(snapshotName, snapshot);
             ui.toggleSnapshotPanel(); // 保存后打开面板方便查看
-            alert(`状态 "${snapshotName}" 已保存！`);
+            alert(`状态 "${snapshotName}" 已保存并持久化！`);
         }
     }
 
@@ -57,9 +72,10 @@ export function useGraphStateManager() {
     }
 
     // --- 3. 删除快照 ---
-    function onDeleteSnapshot(key: string) {
-        if (confirm(`确定删除快照 "${key}" 吗？`)) {
-            delete analysisStore.savedSnapshots[key];
+    function onDeleteSnapshot(name: string) {
+        if (confirm(`确定删除快照 "${name}" 吗？`)) {
+            analysisStore.deleteSnapshot(name); 
+            alert(`快照 "${name}" 已删除并从本地存储中移除!`);
         }
     }
 
@@ -78,15 +94,15 @@ export function useGraphStateManager() {
         };
 
         // 2. 存储到指定的字段
-        analysisStore.lastRoundFunctionSnapshot = snapshot;
+        analysisStore.setLastRound(snapshot);
         analysisStore.isLastRoundDifferent = true;
         
-        alert('当前画布结构已保存为特殊的“最后一轮轮函数”。');
+        alert('最后一轮函数已保存并持久化!');
     }
 
     // --- 5. 加载特殊最后一轮函数 ---
     function onLoadLastRound() {
-        const snapshot = analysisStore.lastRoundFunctionSnapshot;
+        const snapshot = analysisStore.lastRoundSnapshot;
         if (snapshot) {
             if (confirm("确定要加载 '特殊最后一轮函数' 到画布吗？当前画布将被覆盖！")) {
                 _loadSnapshotToCanvas(snapshot);
@@ -101,9 +117,9 @@ export function useGraphStateManager() {
     // --- 6. 清除特殊最后一轮函数配置 ---
     function onClearLastRound() {
         if (confirm("确定要清除保存的 '特殊最后一轮函数' 配置吗？")) {
-            analysisStore.lastRoundFunctionSnapshot = null;
+            analysisStore.clearLastRound();
             analysisStore.isLastRoundDifferent = false;
-            alert('特殊最后一轮函数配置已清除。');
+            alert('最后一轮函数已清除并从本地存储中移除!');
         }
     }
 

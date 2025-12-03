@@ -342,10 +342,18 @@ function onKeydown(e: KeyboardEvent) {
 
 // 把监听挂在全局
 onMounted(() => {
-  document.addEventListener('keydown', onKeydown)
+  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('contextmenu', handleClickOutside)
+  document.addEventListener('keydown', onKeydown) // 确保 keydown 也在这里
+  
+  // 🚀 核心修改：在组件挂载时，从 localStorage 加载数据
+  analysisStore.loadFromLocalStorage() 
 })
+
 onUnmounted(() => {
-  document.removeEventListener('keydown', onKeydown)
+  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('contextmenu', handleClickOutside)
+  document.removeEventListener('keydown', onKeydown) // 确保 keydown 也在这里
 })
 
 // -------- 默认边配置 --------
@@ -438,16 +446,6 @@ function onRightClickPane(event: MouseEvent) {
 function handleClickOutside() {
   menu.hideMenu()
 }
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-  document.addEventListener('contextmenu', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  document.removeEventListener('contextmenu', handleClickOutside)
-})
 
 function onExportClick() {
     const json = exportGraph()
